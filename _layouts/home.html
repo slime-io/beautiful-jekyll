@@ -85,6 +85,15 @@ layout: page
     </div>
     {% endif %}
 
+    {% if post.categories.size > 0 %}
+    <div class="blog-categories">
+      <span>Categories:</span>
+      {% for category in post.categories %}
+      <a href="{{ '/categories' | absolute_url }}#{{- category -}}">{{- category -}}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
    </article>
   {% endfor %}
 </div>
