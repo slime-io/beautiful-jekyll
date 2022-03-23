@@ -1,5 +1,7 @@
 - [Slime Blog介绍](#slime-blog介绍)
   - [本地调试GIthub Pages](#本地调试github-pages)
+    - [安装](#安装)
+    - [本地运行](#本地运行)
   - [添加Blog](#添加blog)
 
 
@@ -15,7 +17,20 @@
 
 ## 本地调试GIthub Pages
 
-在本地准备好ruby, bundle等工具后，进入本地 `slime-io.github.io`项目文件夹，执行`bundle exec jekyll serve`，可在本地4000端口访问界面。
+### 安装
+
+- 根据[Jekyll Installation](https://jekyllrb.com/docs/installation/)，确保[Requirements](https://jekyllrb.com/docs/installation/#requirements)全部满足
+- 根据[Guides](https://jekyllrb.com/docs/installation/#guides)，根据OS，安装依赖
+
+
+
+### 本地运行
+
+ubuntu系统为例
+
+- 进入本地 `slime-io.github.io`项目文件夹
+- `source ~/.bashrc`
+- 执行`bundle exec jekyll serve`，可在本地4000端口访问界面。
 
 详情参见[使用 Jekyll 在本地测试 GitHub Pages 站点](https://docs.github.com/cn/pages/setting-up-a-github-pages-site-with-jekyll/testing-your-github-pages-site-locally-with-jekyll)
 
@@ -38,7 +53,7 @@
    thumbnail-img: /assets/img/thumb.png	# 自定义，网站主页处该博客的配图
    share-img: /assets/img/path.jpg	# 自定义，分享该博客的链接封面图
    tags: [overview]	# 自定义，博客的提示标签，可以多个，逗号分割
-   categories: overview	# 表明博客所属分类，在[overview, framework, lazyload, limiter, plugin]中选择一个
+   categories: overview	# 表明博客所属分类，在[overview, framework, lazyload, limiter, plugin, release-notes, others]中选择一个
    ---
    
    目录]
