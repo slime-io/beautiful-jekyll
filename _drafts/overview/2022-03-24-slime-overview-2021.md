@@ -24,58 +24,60 @@ categories: overview
 
 ## 一、导读
 
-我们团队在2021年初开源了Slime项目，当初的目的是解决一些Isito服务网格使用上的痛点，方便用户通过Slime，无侵入地使用服务网格的高级功能。这一年来，我们沿着当初的目标，稳步发展，在架构、功能、工程角度做了很多变化和尝试，进一步提升了易用性和可靠性，并且在2021年12月受邀加入Istio生态，成为[Istio Ecosystem - integrations](https://istio.io/latest/about/ecosystem/)的成员。
+我们团队很早就开始使用 Istio 做服务网格。在实践过程中，我们开发了很多 Istio 周边模块，方便了自身及集团内部客户使用 Istio 。为了回馈社区，我们系统整理了这些模块，并选择了一部分，在2021年初开源出 Slime 项目。Slime 项目旨在解决 Isito 使用上的痛点，方便用户使用 Istio 的高级功能，并始终坚持**可以无缝对接Istio，无需任何的定制化改造**的原则，极大降低了使用门槛。
 
-今天，本文旨在介绍下Slime这一年来的几个重要变化，展望下未来发展，希望能让更多的朋友看到Slime，参与Slime，一起更好的使用服务网格。
+这一年多来，Slime 在架构、功能、工程方面做了很多变化和尝试，得到了很大提升，并且在2021年12月受邀加入 Istio 生态，正式成为 [Istio Ecosystem - integrations](https://istio.io/latest/about/ecosystem/) 的成员。
 
-
-
-## 二、框架层演进
-
-Slime项目在开源之初是一个单体的项目，分为Operator，Controller，Metric三个部分，初期的架构如下图所示
-
-<img src="../../assets/img/blog-slime-overview-2021/slime-arch-v1.png" style="zoom:50%;" />
-
-具体来说
-
-- Operator部分名字是Slime-boot，作用是监听用户创建的kind为`SlimeBoot`的CR资源，读取用户定义的Slime配置信息，拉起相应的模块
-- Controller部分是诸如Lazyload，Limiter之类的具体模块。每个模块都有自己专注的Slime CRD，彼此功能不重叠
-- Metric部分又称Slime-metric，主要负责从metric source处（比如Prometheus）获取metric，供Controller中各模块使用
-
-可以看出，三层架构中，Operator和Metric的能力是比较单一的，真正的扩展性体现在Controller中不同的模块。把这么多功能层次放在一个代码仓库中，不同层次的耦合很深，不利于开发扩展。因此，我们本着“高内聚，低耦合”的设计思想，进行了架构大调整。新的架构如下图所示
+今天，本文将会介绍 Slime 现阶段的主要能力，以懒加载和智能限流模块为主，并展望未来发展，希望能让更多的 ServiceMesher 了解 Slime，参与 Slime，一起更轻松地使用服务网格。
 
 
 
 
 
-<img src="../../assets/img/blog-slime-overview-2021/slime-arch-v2.png" style="zoom: 50%;" />
+## 二、懒加载
+
+### 2.1 背景
+
+Istio 的全量推送，是所有 Istio 使用者绕不开的问题。
+
+众所周知，早期 Istio 的配置下发非常粗糙，直接全量推送。这意味着，随着服务网格中业务规模的不断扩大，控制面需要下发的内容越来越多，数据面需要接收的内容也不断增长，这必然带来性能问题。而且集群中往往有多个业务系统。一个业务系统的应用感知所有业务系统的配置，这意味着推送大量冗余配置，也是不合理的。
+
+于是，Istio 1.1版本提供了解决方案 - SidecarScope。用户可以在 SidecarScope 中描述 SidecarProxy 需要关心的服务信息，借此屏蔽无关的服务配置下发。一个典型的 SidecarScope 样例如下，样例表示允许匹配的 SidecarProxy 感知 Namespace prod1 和 istio-system 中的所有服务以及 Namespace prod2中 ratings 服务配置信息。
+
+```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Sidecar
+metadata:
+  name: default
+  namespace: prod1
+spec:
+  egress:
+  - hosts:
+    - "prod1/*"
+    - "prod2/ratings.prod2.svc.cluster.local"
+    - "istio-system/*"
+```
+
+Istio 提供的 SidecarScope 确实可以解决配置全量下发的问题。但是在实践中，手动管理 SidecarScope 却很困难。一方面是服务依赖的信息不好整理，另一方面一旦配置有误，会导致调用出现问题。我们迫切希望能够更智能地管理 SidecarScope。
 
 
 
-仍然是三个层次，Slime-boot的定位没有太大变化，封装了一个Helm Operator，用于根据`Slimeboot` CR，拉起Framework和指定的Modules。
+### 2.2 价值
 
-不同的是，我们把Metric扩展为可以提供更多能力的Framework层。**整个Framework层的定位是提供模块需要的共性能力**，让模块专注于自身独有的业务逻辑，从而划清了Modules和Framework的边界，做到低耦合。
+[懒加载模块](https://github.com/slime-io/lazyload)就是用于解决上述问题。懒加载可**自动对接服务网格，在转发过程中支持 Istio 所有网络治理能力，无性能问题**。懒加载帮助业务人员既使用了 SidecarScope，又无需直接管理它。
 
-这样带来的好处是，我们可以从Modules和Framework两个层次进行演进，实现高内聚。
-
-- Framework层次，专注于基础能力提升。除了原先的metric query能力，还提供了标准化的日志能力、pprof数据查询能力、自定义api接口、健康检查等
-- Modules层次，专注于标准模块的抽象。我们基于CRD Operator模式，定义了一个Slime Module应该是什么样，并相应开发出了Slime-builder脚手架，可以一键生成标准模块。
-
-由此，我们将Slime的代码仓库分成1+N：Slime-boot和Framework继续沿用之前的slime-io/slime仓库，Lazyload等模块全部单独创建仓库。至此解决了之前代码开发“牵一发动全身”的痛苦。
-
-上下层标准化后的另一个好处是，部署形式上的聚合。既然所有模块的依赖，一个Framework就可以解决，模块彼此之间又互不干扰，那部署形式自然也可以是1+N的，即一个Slime Deployment包含一个公用的Framework层和用户想要的N个模块。这有点类似于宿主机上的多个Docker容器。
-
-至于想要哪些模块，可以通过Slime-boot CR指定，由Slime-boot Deployment拉起自定义的Slime Deployment。实际上，Slime Deployment中一个模块也可以拉起多个，带上不同的Revision标签，比如Lazyload-v1和Lazyload-v2，使用方式类似于Istio Revision。
+我们认为，服务依赖关系可以分成运行过程中不断变化的动态服务依赖和业务人员可以提前感知的静态服务依赖两类。对于动态依赖，我们设计了一套机制，实时获取服务依赖并修改 SdiecarScope；对于静态依赖，我们着重简化了配置规则，使其更加人性化。
 
 
 
+### 2.3 动态配置更新
 
+懒加载包含 Global-sidecar 和 Lazyload Controller 两个组件。
 
-## 三、懒加载模块发展
+- Global-sidecar: 兜底组件，当源服务无法找到目标服务时，进行兜底转发，并生成相应的服务依赖 Metric
+- Lazyload Controller: 控制组件，处理 Global-sidecar 上报的 Metric，修改源服务的 SidecarScope，为其增加相应配置
 
-随着服务网格上业务规模的逐步变大，配置全量下发导致的性能问题，会对数据面和控制面都有较为严重的性能影响。Istio社区提供的解决方案是配置SidecarScope，屏蔽无关服务的配置和服务发现信息。但是在实施过程中，需要手动配置SidecarScope，非常不便。
-
-懒加载模块就是用于解决这个问题。其核心流程如下所示
+简化的动态配置更新流程如下所示
 
 
 
@@ -83,67 +85,35 @@ Slime项目在开源之初是一个单体的项目，分为Operator，Controller
 
 
 
-- 服务A的SidecarScope初始是空白，没有服务B的配置信息
-- 服务A发起对服务B的第一次访问，由于服务A的SidecarProxy没有服务B的配置信息，请求发送到兜底组件Global-Sidecar
-- 兜底组件Global-Sidecar拥有全量服务配置信息，自然包含服务B的，实现转发，首次请求访问成功。同时生成Metric(A->B)
-- Lazyload Controller根据Metric修改SidecarScope A，增加B的配置
-- 服务A第二次访问服务B时，服务A的SidecarProxy已经有B的配置信息，请求直接到达服务B
-
-懒加载模块可以实现**按照网格治理规则实现兜底转发首次请求，并按需实时配置SidecarScope**。我们引入了ServiceFence这一Slime CRD，它决定了对应的SidecarScope的内容。
-
-懒加载一直是大家比较关注的Slime模块，我们也针对懒加载进行了许多提升。下面主要介绍下这些提升中比较有代表性的两个，懒加载的架构升级和静态配置增强。
+- 服务 A 的 SidecarScope 初始是空白，没有服务 B 的配置信息
+- 服务 A 发起对服务 B 的第一次访问，由于服务 A 的 SidecarProxy 没有服务 B 的配置信息，请求发送到兜底组件 Global-Sidecar
+- 兜底组件 Global-Sidecar 拥有全量服务配置信息，自然包含服务 B ，转发请求到服务 B，首次请求成功，并生成 Metric(A->B)
+- Lazyload Controller 感知到 Metric(A->B) ，修改 SidecarScope A，为其增加服务 B 的配置
+- 服务 A 第二次访问服务 B 时，服务 A 的 SidecarProxy 已经有服务 B 的配置，请求直达服务 B
 
 
 
-### 3.1 架构升级
-
-下面是懒加载升级前的架构。
-
-
-
-<img src="../../assets/img/blog-slime-overview-2021/lazyload-arch-v1.png" style="zoom:75%;" />
-
-
-
-对照上面的懒加载核心流程图，之前的懒加载模块的三个问题，我称之为“1-2-3”，即
-
-- 一个依赖：Lazyload Controller只支持查询Prometheus metric。这意味着懒加载模块强依赖Prometheus。
-- 两个版本：兜底组件由global-sidecar-pilot和global-sidecar组成。global-sidecar是一个独立运行的sidecar proxy，负责兜底。global-sidecar-pilot是一个定制化的Pilot，作用是基于集群原有Pilot的配置添加定制化逻辑，输出给global-sidecar，保证global-sidecar可以正常兜底。问题是，global-sidecar-pilot并不一定和集群原有Pilot的版本保持一致。global-sidecar也和其他sidecar proxy版本不一致。这意味着，集群中可能存在两个版本的控制面、数据面，存在数据兼容性隐患。
-- 三类组件：因为兜底组件由global-sidecar-pilot和global-sidecar组成，所以相比理想的懒加载架构，这个版本的懒加载一共有global-sidecar-pilot，global-sidecar和lazyload controller三类组件。在这个版本推荐的懒加载namespace部署模式下，每个namespace中需要部署⼀个global-sidecar。再考虑集群唯⼀的lazyload controller，global-sidecar-pilot。对于N个namespace，需要N+2个Deployment，资源开销是O(N)。
-
-针对上面的问题，我们着重从去除强依赖、统一版本、精简组件的角度进行了架构升级。现在新的懒加载架构示意图如下
-
-
+详细的流程图如下
 
 <img src="../../assets/img/blog-slime-overview-2021/lazyload-arch-v2.png" style="zoom:75%;" />
 
-
-
-可以对应的总结为“0-1-2”，即
-
-- 零个依赖：新增支持以accesslog作为metric source，直接从global-sidecar的accesslog中获取服务依赖关系，不再强依赖Prometheus。当然，仍然支持以Prometheus作为metric source。
-- 一个版本：去除了global-sidecar-pilot组件。global-sidecar由sidecar proxy改造成普通应⽤（包含了访问⽬标转换的处理逻辑），由业务集群Pilot注⼊版本⼀致的sidecar proxy。既去除了定制化的Pilot，⼜摆脱了对sidecar proxy版本的要求，彻底解决兼容性问题。
-- 两类组件：组件种类只有global-sidecar和lazyload controller。在这个版本推荐的懒加载cluster部署模式下，每个集群只需要lazyload controller和global-sidecar两个deployment。对于N个namespace资源开销从O(N) 降低到 O(1)。
-
-至此，懒加载的架构基本确定下来。
+其中 ServiceFence 是懒加载中引入的 CRD，作用是存储与服务相关的 Metric，实现 SidecarScope 的更新。详细的介绍可参考 [懒加载教程-架构](https://github.com/slime-io/lazyload/blob/master/lazyload_tutorials_zh.md#%E6%9E%B6%E6%9E%84)
 
 
 
-### 3.2 静态配置增强
+### 2.4 静态配置增强
 
-懒加载前期的发展，我们一直聚焦于服务依赖关系的获取，就像前文懒加载核心流程图所示的那样，更多考虑的是如何获取metric、修改SidecarScope。其实是**动态服务依赖关系**的处理。但在与内外部一些用户的交流过程中，我们发现用户出于安全可控的现实考虑，往往希望提前指定一些服务依赖关系，直接配置到SidecarScope中，即**静态服务依赖关系**。
+懒加载发展早期，我们聚焦于动态服务依赖关系的获取，这看起来智能又省心。然而在实践中，我们发现很多用户出于安全考虑，往往希望直接配置一些规则到 SidecarScope 中，即配置静态服务依赖关系。于是，我们开始思考如何灵活配置静态依赖关系。
 
-这似乎又回到了手动修改SidecarScope的老路，但实则不然。我们现在拥有ServiceFence（Slime CRD）的帮助，以及动态修改SidecarScope的完善流程。于是，可以从静态服务依赖关系抽象出**静态服务依赖规则**，将这些规则写入ServiceFence。之后Lazyload Controller只需要按部就班的根据这些规则自动找出匹配的服务，更新SidecarScope即可。从手动修改SidecarScope，变成手动修改ServiceFence，想象的空间打开了。
+于是，我们设计出一套很好用的静态规则，并将其写到 ServiceFence 中（是的，就是动态配置更新中用于存储 Metric 的小帮手，它在这里发挥了新作用）。之后 Lazyload Controller 根据这些规则更新相应的 SidecarScope 。
 
-现在我们已经提供的静态配置规则有三类：
+现在我们提供的静态配置规则有三类：
 
-- 依赖某些namespace所有服务
-- 依赖具有某些label的所有服务
+- 依赖某些 Namespace 所有服务
+- 依赖具有某些 label 的所有服务
 - 依赖某个特定服务
 
-终于，同学们不用在上线前反复确认，新上线服务的SidecarScope是否确实填齐了那长长的依赖服务列表，更不用在下次被突然告知依赖的系统有服务变更时，赶过来修改自己的SidecarScope，配置一个简单的ServiceFence就可高枕无忧。
-
-下面举个例子，微服务系统往往都有一些共性的label，假如依赖的一个系统都有label `system: foo`，依赖的另一个系统都有label `system: bar`和`owner: bob`，那依赖这两个服务系统的ServiceFence就是这样
+举个例子，微服务系统往往都有一些共性的label，假如服务 my-service 依赖的具有 label `system: foo`或具有 label `system: bar ` 与`owner: bob`的所有服务，那依赖这两个服务系统的 ServiceFence 如下，SidecarScope 中会根据实际匹配结果，填充`egress.hosts`。
 
 ```yaml
 ---
@@ -162,70 +132,258 @@ spec:
         owner: bob
 ```
 
-看起来，是不是清爽极了。
+终于，我们不用在上线前反复确认，是否填齐了所有服务依赖，更不用在服务依赖关系变更时，手动修改 SidecarScope。配置两三条 ServiceFence 的规则就可搞定一切。
 
-这块的内容详见[懒加载教程 - 静态服务依赖关系添加](https://github.com/slime-io/lazyload/blob/master/lazyload_tutorials_zh.md#%E9%9D%99%E6%80%81%E6%9C%8D%E5%8A%A1%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB%E6%B7%BB%E5%8A%A0)。
+详细的介绍可参考 [懒加载教程 - 静态服务依赖关系添加](https://github.com/slime-io/lazyload/blob/master/lazyload_tutorials_zh.md#%E9%9D%99%E6%80%81%E6%9C%8D%E5%8A%A1%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB%E6%B7%BB%E5%8A%A0)
 
 
 
-## 四、智能限流模块发展
+### 2.5 Metric类型
 
-智能限流模块是Slime中另一个比较受大家关注的模块。在服务网格中，为了配置限流规则，用户不得不面对复杂的EnvoyFilter配置，为了解决这个问题，我们们推出了智能限流模块，其对应的Slime CRD是`SmartLimiter`。
+在2.3章节中，我们解释了 Metric 是动态依赖关系生成的根本。目前懒加载支持的 Metric 类型有两个：Prometheus 和 AccessLog，通过修改懒加载的配置`global.misc.metricSourceType`指定。
 
-在之前开源的版本中，我们主要提供了两种场景的限流能力：
+使用 Prometheus Metric，指标来源由各个业务应用的 SidecarProxy 产生。此模式有一定外部依赖要求，需要用户的服务网格对接 Prometheus。
 
-- 本地限流：替服务的每个Pod设置固定的限流数值
-- 全局均分限流：根据用户设置的总的限流数，自动根据后端Pod数，算出每个Pod的限流数值
+使用 AccessLog Metric，指标来源是 Global-sidecar 的 AccessLog。Global-sidecar 在兜底转发的同时，会生成固定格式的 AccessLog，发往 Lazyload Controller 进行处理。此模式无需外部依赖，更为轻便。
 
-以上两种场景是比较基础，也是大家用到较多的场景。其实全局均分限流，就是本地限流叠加Pod数感知的一个进阶版，实现方式类似，底层都是依赖Envoy插件`envoy.filters.http.local_ratelimit`提供的限流能力。想做出全面的智能限流模块，我们需要挑战看起来更加智能的全局共享限流场景。最终新版本的限流模块架构如下
+
+
+### 2.6 使用模式
+
+懒加载模块有两种使用模式，Namespace 模式和 Cluster 模式。两种模式中，Lazyload Controller 都是全局唯一的，不同点在于前者的 Global-sidecar 是 Namespace 级别，后者是 Cluster 级别。
+
+Namespace 模式是早期演进版本，现在我们更推荐使用 Cluster 模式。如下图所示，每个集群只需要部署两个 Deployment，简洁明了。
+
+
+
+详细的介绍可参考 [懒加载教程 - 安装和使用](https://github.com/slime-io/lazyload/blob/master/lazyload_tutorials_zh.md#%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8) 
+
+
+
+## 三、智能限流
+
+### 3.1 背景
+
+随着 Istio 移除 Mixer，在服务网格中实现限流变得困难起来。
+
+- 场景少：Envoy 的本地限流组件功能简单，不能实现全局均分、全局共享限流等高阶用法
+
+- 条件死：限流触发的条件固定，没有根据资源使用率等实际情况，自动调整的能力
+- 配置复杂：本地限流需要借助 Envoy 内建插件 `envoy.local.ratelimit`，用户不得不面对复杂的 EnvoyFilter 配置
+
+
+
+### 3.2 价值
+
+为了解决这个问题，我们推出了[智能限流模块](https://github.com/slime-io/limiter)。智能限流模块具有很多优势，具体来说
+
+- 场景多：支持本地限流、全局均分限流、全局共享限流
+- 条件自适应：限流触发的条件可结合 Prometheus Metric，动态计算，实现自适应限流效果
+- 配置方便：配置简单，可读性好，无需配置 EnvoyFilter
+
+
+
+### 3.3 实现
+
+我们设计了一个新的CRD - SmartLimiter，其配置规则接近自然语义。模块的逻辑分成两部分
+
+- SmartLimiter Controller 获取监控数据，更新 SmartLimiter CR
+- SmartLimiter CR 到 EnvoyFilter 的转换
+
+限流模块架构如下
 
 <img src="../../assets/img/blog-slime-overview-2021/limiter-arch.png" style="zoom:80%;" />
 
-红色是本地限流，绿色是全局均分限流，而蓝色就是最新实现的全局共享限流。
-
-全局共享限流功能替服务的所有Pod维护了一个全局计数器，底层依赖的是Envoy插件`envoy.filters.http.ratelimit`提供的限流能力和RLS服务提供给的全局计数能力。
-
-当提交一个全局共享限流SmartLimiter后，Limiter模块会根据其内容生成EnvoyFilter和名为`slime-rate-limit-config`的ConfigMap。EnvoyFilter会被Istio监听到，下发限流配置至SidecarProxy，而ConfigMap则会被挂载到RLS服务，RLS根据ConfigMap内容生成全局共享计数器。
-
-诚然，目前受限于工作链路的增加，全局共享限流的性能比不上全局均分限流，但这种能力在一些非性能敏感场景下是有实践可能性的。我们也会继续关注这块的未来优化可能。
+红色是本地限流，绿色是全局均分限流，而蓝色是全局共享限流。详细的介绍可参考 [智能限流教程 - 架构](https://github.com/slime-io/limiter/blob/master/README_ZH.md#%E6%9E%B6%E6%9E%84) 
 
 
 
+### 3.4 本地限流
 
+本地限流是最基础的使用场景。SmartLimiter 替服务的每个 Pod 设置固定的限流数值。底层依赖 Envoy 内建插件 `envoy.local.ratelimit`。标识字段是`action.strategy: single`。
 
-## 五、其他变化
+一个样例如下，表示 reviews 服务每个 Pod 的9080端口每分钟限流 60次。
 
-上面几个章节，以四个例子简要介绍了Slime在过去一年的一些亮点变化。其他方面的一些变化还包括
-
-- 重构Slime-metric，将其真正标准化为Framework层的基础能力
-- 引入E2E测试，建设Slime的质量保证工程
-- 重新编写[官方教程](https://github.com/slime-io/slime/blob/master/README_ZH.md#%E6%95%99%E7%A8%8B)，包含丰富的概念介绍和使用样例
-- 搭建了[Slime Blog](https://slime-io.github.io/)，后续的相关博客、Release-notes等都会更新在上面
-
-
-
-
-
-## 六、展望
-
-最后，关于Slime的未来发展方向，还是在于已有模块的提升和新模块的引入两方面。
-
-对于前者，一个重点是懒加载易用性完善。比较确定的内容有支持一键自动纳管整个服务网格、提供更高灵活度的静态服务依赖配置能力、支持更多协议的服务懒加载，探索性的内容比如跨集群的服务懒加载。另一个重点是限流能力的丰富，比较确定的内容有出流量侧限流支持、支持更多协议的服务限流。
-
-对于后者，我们目前已经在内部孵化的一些新模块，功能主要涉及服务网格的全链路自动化运维、服务网格的无感热升级、好用的服务网格黑屏半命令行半图形化工具等。
-
-希望上面的这些新内容能尽快与大家见面，也欢迎大家多多交流，多多关注Slime。
-
-
-
-## 修改建议 - 20220328
-
-1.每个章节需要铺垫更多，模块的价值+改进工作的价值并重，比如我们新增了哪些特性，讲清楚特性的价值，扔一些链接出来；再比如，新老架构图放一起，简洁叙述提升点123
-
-2.各个章节写得过于面向对slime比较熟悉的开发者，技术细节进行精简，避免大段文字
-
-3.展望过于简单，需要更详细些
+```yaml
+apiVersion: microservice.slime.io/v1alpha2
+kind: SmartLimiter
+metadata:
+  name: reviews
+  namespace: default
+spec:
+  sets:
+    _base:   # 匹配所有服务，关键词 _base ，也可以是你定义的 subset ，如 v1 
+      descriptor:   
+      - action:    # 限流规则
+          fill_interval:
+            seconds: 60
+          quota: '100'
+          strategy: 'single'  
+        condition: 'true'  # 永远执行该限流
+        target:
+          port: 9080
+```
 
 
 
-这两周改下
+### 3.5 全局均分限流
+
+全局均分限功能根据用户设置的总的限流数，然后平均分配到各个 Pod。底层依赖 Envoy 内建插件 `envoy.local.ratelimit`。标识字段是`action.strategy: average`。
+
+一个样例如下，表示 reviews 服务所有 Pod 的9080端口每分钟一共限流 60次，具体到每个 Pod 的限流次数由 `action.quota`计算得出。
+
+```yaml
+apiVersion: microservice.slime.io/v1alpha2
+kind: SmartLimiter
+metadata:
+  name: reviews
+  namespace: default
+spec:
+  sets:
+    _base:
+      descriptor:
+      - action:
+          fill_interval:
+            seconds: 60
+          quota: '100/{{._base.pod}}' # 如果reviews实例数是2,则每个Pod限流每分钟50次
+          strategy: 'average'  
+        condition: 'true'
+        target:
+          port: 9080
+```
+
+
+
+### 3.6 全局共享限流
+
+全局共享限流限制目标服务的所有 Pod 可访问的总次数，不会像全局均分限流限制在平均值，比较适用于访问不均的场景。此场景会维护一个全局计数器，底层依赖 Envoy 插件 `envoy.filters.http.ratelimit`和 RLS 服务提供的全局计数能力。标识字段是`action.strategy: global`。
+
+一个样例如下，表示 reviews 服务所有 Pod 的9080端口每分钟一共限流 60次，不均分到每个 Pod。
+
+```yaml
+apiVersion: microservice.slime.io/v1alpha2
+kind: SmartLimiter
+metadata:
+  name: reviews
+  namespace: default
+spec:
+  sets:
+    _base:
+      #rls: 'outbound|18081||rate-limit.istio-system.svc.cluster.local' 如果不指定默认是该地址
+      descriptor:
+      - action:
+          fill_interval:
+            seconds: 60
+          quota: '100'
+          strategy: 'global'
+        condition: 'true'
+        target:
+          port: 9080 
+```
+
+
+
+### 3.7 自适应限流
+
+上述三个场景中，触发限流的条件字段`condition`除了可以是固定数值（true），还可以是 Prometheus Query 的计算结果。后者就是自适应限流。此场景和上述三个场景是交叉关系。
+
+用户可以自定义需要获取的监控指标，比如定义一个handler `cpu.sum`，其数值等于 `sum(container_cpu_usage_seconds_total{namespace="$namespace",pod=~"$pod_name",image=""})`，后面就可以将触发限流的`condition`设置为`{{._base.cpu.sum}}>100` 的形式，实现自适应限流。
+
+一个样例如下，表示 reviews 服务每个 Pod 的9080端口只有当CPU使用值大于100时，每分钟限流 60次。对比3.4中的例子，`condition`不再永远为真，是否触发限流，由 SmartLimiter Controller 根据应用实际状态判断，更加智能化。
+
+```yaml
+apiVersion: microservice.slime.io/v1alpha2
+kind: SmartLimiter
+metadata:
+  name: reviews
+  namespace: default
+spec:
+  sets:
+    _base:   # 匹配所有服务，关键词 _base ，也可以是你定义的 subset ，如 v1 
+      descriptor:   
+      - action:    # 限流规则
+          fill_interval:
+            seconds: 60
+          quota: '100'
+          strategy: 'single'  
+        condition: '{{._base.cpu.sum}}>100'  如果服务的所有负载大于100，则执行该限流
+        target:
+          port: 9080
+```
+
+
+
+
+
+## 四、项目架构
+
+这一节简单介绍下 Slime 的项目架构，帮助大家理解 Slime 多模块场景下的代码仓库和部署形态。架构如下图所示
+
+
+
+
+
+<img src="../../assets/img/blog-slime-overview-2021/slime-arch-v2.png" style="zoom: 50%;" />
+
+
+
+Slime 的项目架构遵守“高内聚，低耦合”的设计思想，包含三块
+
+- Modules: 提供某个功能的独立模块，像懒加载、智能限流都属于 Modules
+- Framework: 模块的底座，提供 Modules 需要的基础能力，比如日志输出、监控指标获取
+
+- Slime-boot: 启动组件，负责拉起 Framework 和指定的 Modules
+
+整个代码仓库分成 1+N。Slime-boot 和 Framework 位于 slime 主仓库 [slime-io/slime](https://github.com/slime-io/slime)，懒加载等模块全部位于独立仓库。
+
+部署形式也是 1+N 的，即一个 Slime Deployment 包含一个公用的 Framework 和用户想要的 N 个模块。好处是，无论使用多少 Slime 模块，部署时都是一个 Deployment，很好解决了微服务组件过多的维护痛点。
+
+
+
+
+
+## 五、展望
+
+Slime 开源至今一年多的时间，除了模块层面新功能的添加、已有功能的完善，还经过了一次架构大调整和 Metric 体系的重构，可以说，现在 Slime 的发展已经走上正轨，进入新的阶段。未来规划可以分为已有模块的提升和新模块的引入，下面详细说明。
+
+
+
+### 5.1 懒加载规划
+
+| 特性               | 特性说明                                                     | 性质   | 计划发布时间 |
+| ------------------ | ------------------------------------------------------------ | ------ | ------------ |
+| 灾备兜底能力       | 改造Global-sidecar组件，完善其兜底能力，使懒加载可用于一些灾备场景 | 确定性 | 2022.Q2      |
+| 多服务注册中心支持 | 懒加载目前主要适配 Kubernetes 场景，计划通过对 ServiceEntry 的支持，适配多服务注册中心场景 | 确定性 | 2022.Q3      |
+| 更灵活的静态配置   | 通过更高维度的抽象，实现 ServiceFence 的自动配置，支持更高级的静态规则 | 确定性 | 2022.Q4      |
+| 多协议懒加载       | 懒加载目前支持Http服务，计划支持其他协议服务的懒加载，比如Dubbo等 | 探索性 | 2022.H2      |
+| 跨集群懒加载       | 懒加载目前支持同集群服务，计划支持多集群服务网格场景下的跨集群服务懒加载 | 探索性 | 2022.H2      |
+
+
+
+### 5.2 智能限流规划
+
+| 特性               | 特性说明                                                     | 性质   | 计划发布时间 |
+| ------------------ | ------------------------------------------------------------ | ------ | ------------ |
+| 多服务注册中心支持 | 智能限流目前主要适配 Kubernetes 场景，计划通过对 ServiceEntry 的支持，适配多服务注册中心场景 | 确定性 | 2022.Q2      |
+| 出流量侧限流       | 智能限流目前支持入流量侧限流，这可以满足大多数场景，但是从能力完备度上，计划支持出流量侧限流 | 确定性 | 2022.Q3      |
+| 多协议智能限流     | 智能限流目前支持Http服务，计划支持其他协议服务的智能限流，比如Dubbo等 | 探索性 | 2022.H2      |
+| 跨集群智能限流     | 智能限流目前支持同集群服务，计划支持多集群服务网格场景下的跨集群智能限流 | 探索性 | 2022.H2      |
+
+
+
+### 5.3 新模块规划
+
+| 模块名（规划） | 模块说明                                                     | 性质   | 计划发布时间 |
+| -------------- | ------------------------------------------------------------ | ------ | ------------ |
+| Mesh-Registry  | 扩展 Istio 对服务注册中心的支持能力，对接多个服务注册中心，将注册中心的实例转换为网格的实例；扩展 Istio 对非 K8s 的配置中心的支持能力，对接多个配置中心，将外部配置转换成网格配置 | 确定性 | 2022.Q3      |
+| Tracetio       | 服务网格的全链路自动化运维，提高排障效率，给出智能化判断     | 探索性 | 2022.H2      |
+| I9s            | 类似K9s，适用于服务网格场景的黑屏半命令行半图形化运维工具    | 探索性 | 2022.H2      |
+
+
+
+希望上面的这些规划能尽快与大家见面，也欢迎大家多多与我们交流。
+
+
+
+
+
