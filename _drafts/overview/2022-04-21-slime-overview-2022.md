@@ -38,11 +38,11 @@ categories: overview
 
 ## 一、导读
 
-我们团队很早就开始使用 Istio 做服务网格。在实践过程中，我们开发了很多 Istio 周边模块，方便了自身及集团内部客户使用 Istio 。为了回馈社区，我们系统整理了这些模块，并选择了一部分，在2021年初开源出 [Slime 项目](https://github.com/slime-io/slime)。
+网易数帆轻舟微服务团队很早就开始使用 Istio 做服务网格。在实践过程中，我们开发了很多 Istio 周边模块，方便了自身及网易集团内部客户使用 Istio 。为了回馈社区，我们系统整理了这些模块，并选择了一部分，在2021年初开源出 [Slime 项目](https://github.com/slime-io/slime)。
 
 <img src="../../assets/img/blog-slime-overview-2021/slime_logo.png" style="zoom:20%;" />
 
-Slime 项目旨在解决 Isito 使用上的痛点，方便用户使用 Istio 的高级功能，并始终坚持**可以无缝对接Istio，无需任何的定制化改造**的原则，极大降低了使用门槛。
+Slime 项目旨在解决 Istio 使用上的痛点，方便用户使用 Istio 的高级功能，并始终坚持**可以无缝对接Istio，无需任何的定制化改造**的原则，极大降低了使用门槛。
 
 这一年多来，Slime 在架构、功能、工程方面做了很多变化和尝试，得到了很大提升，并且在2021年12月受邀加入 Istio 生态，正式成为 [Istio Ecosystem - integrations](https://istio.io/latest/about/ecosystem/) 的成员。
 
@@ -90,7 +90,7 @@ Istio 提供的 SidecarScope 可以解决配置全量下发的问题，看起来
 
 [懒加载模块](https://github.com/slime-io/lazyload)就是用于解决上述问题。懒加载可**自动对接服务网格，在转发过程中支持 Istio 所有网络治理能力，无性能问题**。它可以帮助业务人员使用了 SidecarScope，而无需直接管理它。
 
-我们认为，服务依赖关系可以分成运行过程中不断变化的动态服务依赖和业务人员可以提前知晓的静态服务依赖两类。对于动态依赖，我们设计了一套机制，实时获取服务依赖并修改 SdiecarScope；对于静态依赖，我们着重简化了配置规则，使其更加人性化。
+我们认为，服务依赖关系可以分成运行过程中不断变化的动态服务依赖和业务人员可以提前知晓的静态服务依赖两类。对于动态依赖，我们设计了一套机制，实时获取服务依赖并修改 SidecarScope；对于静态依赖，我们着重简化了配置规则，使其更加人性化。
 
 
 
