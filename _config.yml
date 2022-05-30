@@ -21,9 +21,9 @@ navbar-links:
     - English: "https://github.com/slime-io/slime/blob/master/README.md#tutorials"
   Github社区:
     - Framework: "https://github.com/slime-io/slime"
-    - Lazyload: "https://github.com/slime-io/lazyload"
-    - Limiter: "https://github.com/slime-io/limiter"
-    - Plugin: "https://github.com/slime-io/plugin"
+    - Lazyload: "https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/lazyload"
+    - Limiter: "https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/limiter"
+    - Plugin: "https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/plugin"
   交流: "https://github.com/slime-io/slime/blob/master/README_ZH.md#%E4%BA%A4%E6%B5%81"
 
 # --- Logo --- #
