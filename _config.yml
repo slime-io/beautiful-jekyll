@@ -15,15 +15,15 @@ author: Slime Team
 
 navbar-links:
   # About Me: "aboutme"
-  博客: "categories"
+  分类: "categories"
   官方教程:
     - 中文: "https://github.com/slime-io/slime/blob/master/README_ZH.md#%E6%95%99%E7%A8%8B"
     - English: "https://github.com/slime-io/slime/blob/master/README.md#tutorials"
   Github社区:
-    - Framework: "https://github.com/slime-io/slime"
     - Lazyload: "https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/lazyload"
     - Limiter: "https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/limiter"
     - Plugin: "https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/plugin"
+    - I9s: "https://github.com/slime-io/i9s"
   交流: "https://github.com/slime-io/slime/blob/master/README_ZH.md#%E4%BA%A4%E6%B5%81"
 
 # --- Logo --- #

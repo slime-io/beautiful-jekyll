@@ -35,7 +35,8 @@ ubuntu系统为例
 详情参见[使用 Jekyll 在本地测试 GitHub Pages 站点](https://docs.github.com/cn/pages/setting-up-a-github-pages-site-with-jekyll/testing-your-github-pages-site-locally-with-jekyll)
 
 
-
+## 页面配置
+修改`_config.yml`文件
 
 
 ## 添加Blog
@@ -53,7 +54,7 @@ ubuntu系统为例
    thumbnail-img: /assets/img/thumb.png	# 自定义，网站主页处该博客的配图
    share-img: /assets/img/path.jpg	# 自定义，分享该博客的链接封面图
    tags: [overview]	# 自定义，博客的提示标签，可以多个，逗号分割
-   categories: overview	# 表明博客所属分类，在[overview, framework, lazyload, limiter, plugin, release-notes, others]中选择一个
+   categories: overview	# 表明博客所属分类，在[overview, framework, lazyload, limiter, plugin, i9s, release-notes, others]中选择一个
    ---
    
    目录]
