@@ -1,0 +1,366 @@
+.md-main__inner {
+  margin: 0;
+  max-width: 100%;
+}
+
+.md-main__inner .md-content__inner,
+.md-sidebar--primary:not([hidden]) ~ .md-content > .md-content__inner {
+  margin: 0;
+  padding: 0;
+}
+
+@media screen and (min-width: 76.25em) {
+  [dir=ltr] .md-sidebar--primary:not([hidden])~.md-content>.md-content__inner {
+      margin-left: 0;
+  }
+}
+
+.md-main__inner .md-content__inner:before {
+  display: none;
+}
+
+@media screen and (min-width: 60em) {
+  .md-sidebar--secondary {
+    display: none;
+  }
+}
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--primary {
+    display: none;
+  }
+}
+
+@keyframes continuousgradient {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+.animated-gradient {
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: 300% 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.animated-gradient img {
+  width: 100%;
+  display: block !important;
+}
+
+.md-typeset img,
+.md-typeset svg {
+  max-width: initial;
+}
+
+/* Fixes logo aspect ratio in Safari */
+section.home-container img {
+  object-fit: contain;
+  object-position: right;
+}
+
+section.home-container {
+  min-height: 435px;
+  color: #fff;
+  position: relative;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+section.home-container .background{
+  width: 100%;
+  padding-top: 29.16%;
+}
+
+.home-container > .md-typeset {
+  flex-grow: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+body {
+  color: #fff;
+  background: var(--md-primary-fg-color);
+  background: #095a99;
+  background: #0071c7;
+  background: var(--home-color);
+}
+
+.whats-next-container,
+.usedby-container,
+.home-container,
+.features-container,
+.intro-container,
+.information-container,
+.components-container {
+  margin: 0;
+  border: 0;
+  padding-top: 2em;
+  padding-bottom: 5em;
+}
+
+.home-container .md-button {
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  color: var(--md-primary-bg-color);
+  background-color: #3D3D40;
+}
+
+.home-container .md-button--primary {
+  background-color: #2264E5;
+  /* color: white; */
+  color: var(--md-primary-bg-color);
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.md-typeset .md-button {
+  border: 0;
+}
+
+.home-container .newbutton{
+  display: flex;
+  width: 8rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+}
+
+.home-container .newbutton svg{
+  margin-left: 3px;
+  width: 1rem;
+  height: 1rem;
+}
+
+.home-container h1 {
+  color: #222222;
+  font-weight: bolder;
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
+.home-container h2 {
+  color: #222222c0;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.whats-next-container {
+  color: #fff;
+  background: #1b2f52;
+}
+
+.whats-next-container .component-flex {
+  display: flex;
+  gap: 2em;
+  padding-top: 1em;
+}
+
+.whats-next-container .pane h4 {
+  font-size: 1.3em;
+}
+
+.whats-next-container .twemoji {
+  color: #fff;
+  justify-content: center;
+}
+
+.whats-next-container .twemoji, .whats-next-container .twemoji svg {
+  height: 3.5em;
+  width: 3.5em;
+}
+
+.whats-next-container .pane {
+  text-align: center;
+}
+
+.whats-next-container .md-button {
+  display: inline-block;
+  margin: 0.5em auto;
+}
+
+.intro-container img {
+  height: 10em;
+  float: right;
+  margin: 0 0 0 2em;
+}
+
+.usedby-container {
+  background: #fff;
+  color: #000;
+  display: flex;
+  justify-content: center;
+}
+
+.usedby-container #usedby-title {
+  display: flex;
+  justify-content: center;
+}
+
+.usedby-container #usedby {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.usedby-container #usedby-more {
+  font-style: italic;
+  font-size: smaller;
+  color: #aaa;
+  text-align: center;
+}
+
+.usedby-container .logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3em 1em;
+  width: 150pt;
+  height: 36pt;
+}
+
+.usedby-container .logo img {
+  max-width: 150pt;
+  max-height: 36pt;
+}
+
+.features-container {
+  color: #000;
+  background: #fff;
+}
+
+.features-container h2{
+  font-size: 1.4rem;
+  text-align: center;
+  margin: 0.6em 0 1.64em;
+}
+
+.features-container ul{
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+
+.features-container ul li{
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 54px !important;
+  margin-left: 0 !important;
+  padding: 0 2rem;
+}
+
+.features-container ul li img{
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 6px;
+}
+
+.features-container ul li p{
+  margin: 0;
+}
+
+.features-container ul li .title{
+  font-size: 0.8rem;
+  color: #333;
+  margin-bottom: 16;
+  font-weight: bold;
+}
+
+.features-container ul li .subtitle{
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.information-container{
+  background: #2B2B2B;
+}
+
+
+.information-container .md-grid{
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+
+.information-container .info{
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 2rem;
+  color: #fff;
+}
+
+.information-container .info h4{
+  font-size: 0.4rem;
+  margin: 0.1rem 0;
+}
+
+.information-container .info p{
+  font-size: 0.3rem;
+  margin: 0.1rem 0;
+}
+
+/* @media only screen and (max-width: 1440px) {
+  .components-container,
+  .whats-next-container,
+  .usedby-container,
+  .home-container,
+  .features-container,
+  .intro-container {
+    padding: 40px;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .component-flex {
+    flex-wrap: wrap;
+  }
+
+  .intro-container img {
+    display: block;
+    margin:0 auto;
+    float: none;
+  }
+} */
+
+
+/* No next/prev links on home page so make sure next/prev area of footer collapses nicely */
+footer nav.md-footer__inner {
+  padding: 0;
+}
+footer .md-footer-meta .md-footer-meta__inner {
+  padding: 1em 0;
+}
+
+.md-footer {
+  margin-top: 0px;
+}
+
+.md-typeset a {
+  color: #fff;
+}
+
+.home-info {
+  width: 52%;
+  color: #333;
+  font-size: 16px;
+  line-height: 26px;
+  margin-top: 8px;
+  white-space: pre-line;
+}

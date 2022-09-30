@@ -1,0 +1,41 @@
+nav:
+    - Home: index.md
+
+    - 快速上手: 
+      - 简介: getting-started/slime-overview.md
+      - 架构: getting-started/slime-arch.md
+      - 交流: getting-started/slime-community.md
+
+    - 用户指南:
+    
+      - Slime-Boot:
+        - 使用: user-guide/slime-boot/usage.md
+        - 默认值说明与替换: user-guide/slime-boot/default-value-intro.md
+        
+      - Lazyload: 
+        - 概述: user-guide/lazyload/overview.md
+        - 架构: user-guide/lazyload/arch.md
+        - 特性: user-guide/lazyload/features.md
+        - 使用: user-guide/lazyload/usage.md
+      
+      - Limiter: 
+        - 概述: user-guide/limiter/overview.md
+        - 架构: user-guide/limiter/arch.md
+        - 特性: user-guide/limiter/features.md
+        - 使用: user-guide/limiter/usage.md
+
+      - Plugin: 
+        - 概述: user-guide/plugin/overview.md
+        - 架构: user-guide/plugin/arch.md
+        - 特性: user-guide/plugin/features.md
+        - 使用: user-guide/plugin/usage.md
+        
+      - I9s: 
+        - 概述: user-guide/i9s/overview.md
+        - 架构: user-guide/i9s/arch.md
+        - 特性: user-guide/i9s/features.md
+        - 使用: user-guide/i9s/usage.md
+
+      - 镜像使用: user-guide/image-usage.md
+
+
