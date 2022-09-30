@@ -1,0 +1,19 @@
+name: ci 
+on:
+  push:
+    branches: 
+      - website
+      - master
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - run: pip install mkdocs-material==7.2.5 
+      - run: mkdocs --version
+      - run: pip show mkdocs-material
+      - run: mkdocs gh-deploy --force
