@@ -10,9 +10,8 @@ nav:
     - 用户指南:
     
       - Slime-Boot:
-        - 使用: user-guide/slime-boot/usage.md
-        - 默认值说明与替换: user-guide/slime-boot/default-value-intro.md
-        
+        - 使用: user-guide/slime-boot/default-value-intro.md
+
       - Lazyload: 
         - 概述: user-guide/lazyload/overview.md
         - 架构: user-guide/lazyload/arch.md
@@ -38,5 +37,14 @@ nav:
         - 使用: user-guide/i9s/usage.md
 
       - 镜像使用: user-guide/image-usage.md
+
+    - Blog:
+      - 一个高效的Istio可视化命令行工具: blog/一个高效的Istio可视化命令行工具.md
+      - Slime让Istio服务网格变得更加高效与智能: blog/Slime让Istio服务网格变得更加高效与智能.md
+      - 把Istio的复杂性塞入智能的黑盒: blog/把Istio的复杂性塞入智能的黑盒.md
+
+    - 版本发布:
+        - v0.5.0: release/v0.5.0.md
+        - v0.4.0: release/v0.4.0.md
 
 
