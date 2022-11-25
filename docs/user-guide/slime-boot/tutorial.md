@@ -1,17 +1,3 @@
-- [slimeboot 介绍与使用](#slimeboot-介绍与使用)
-    - [介绍](#介绍)
-    - [准备](#准备)
-    - [参数介绍](#参数介绍)
-    - [安装](#安装)
-        - [lazyload安装样例](#lazyload安装样例)
-        - [limiter安装样例](#limiter安装样例)
-        - [plugin 安装样例](#plugin-安装样例)
-        - [bundle模式安装样例](#bundle模式安装样例)
-        - [Config.global](#configglobal)
-
-
-# SlimeBoot 介绍与使用
-
 ## 介绍
 
 本文将介绍`SlimeBoot`的使用方式，并给出使用样例，指引用户安装并使用`slime`组件。`slime-boot`可以理解成一个`Controller`, 它会一直监听`SlimeBoot CR`, 当用户提交一份`SlimeBoot CR`后，`slime-boot Controller`会根据`CR`的内容渲染`slime`相关的部署材料。

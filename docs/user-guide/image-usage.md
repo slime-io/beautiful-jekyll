@@ -1,25 +1,67 @@
-## 镜像使用说明
+slime 支持子模块单独构建镜像,也支持构建一个包含全部功能的bundle镜像, 以下分两个部分介绍slime镜像构建
 
+**注意：为了支持多架构镜像,slime用buildx构建镜像, 所以需要所在机器支持`docker buildx`**
 
+## 子模块单独构建镜像
 
-部署时，组件的完整镜像信息=Image Registry:Image Tag，建议选择对应组件最新的tag（根据每行的Update Date）。
+### 构建amd64镜像
 
-**样例**（此处以2021/12/30最新镜像为例）
+切换至子模块所在目录,如限流模块所在目录 `slime/staging/src/slime.io/slime/modules/limiter`
 
-假如需要部署slime-boot，查表可知，slime-boot最新的镜像是 **docker.io/slimeio/slime-boot:v0.3.8-c8a453d**。 在对应的yaml文件中替换镜像信息即可。考虑到国内镜像加速的需要，我们将镜像也同步到了阿里云（**registry.cn-hangzhou.aliyuncs.com**）。
+note: 对于 global-sidecar, 需要切换至`slime/staging/src/slime.io/slime/modules/lazyload/cmd/proxy`
 
+运行以下命令构建amd64镜像
 
+```sh
+./publish.sh build image
+```
 
-| Slime-boot Image Registry                            | Lazyload Image Registry                                  | Limiter Image Registry                                  | Plugin Image Registry                                  | Global-Sidecar Image Registry(for lazyload v0.2+)            | Global-Sidecar Image Registry(for lazyload v0.1)  | Global-Pilot Image Registry(for lazyload v0.1)  |
-| ---------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------- | ----------------------------------------------- |
-| docker.io/slimeio/slime-boot                         | docker.io/slimeio/slime-lazyload                         | docker.io/slimeio/slime-limiter                         | docker.io/slimeio/slime-plugin                         | docker.io/slimeio/slime-global-sidecar                       | istio/proxyv2                                     | docker.io/slimeio/pilot                         |
-| registry.cn-hangzhou.aliyuncs.com/slimeio/slime-boot | registry.cn-hangzhou.aliyuncs.com/slimeio/slime-lazyload | registry.cn-hangzhou.aliyuncs.com/slimeio/slime-limiter | registry.cn-hangzhou.aliyuncs.com/slimeio/slime-plugin | registry.cn-hangzhou.aliyuncs.com/slimeio/slime-global-sidecar | registry.cn-hangzhou.aliyuncs.com/slimeio/proxyv2 | registry.cn-hangzhou.aliyuncs.com/slimeio/pilot |
+运行以下命令构建arm64镜像
 
-| Slime-boot Image Tag | Lazyload Image Tag | Limiter Image Tag  | Plugin Image Tag   | Global-Sidecar Image Tag(for lazyload v0.2+) | Update Date |
-| -------------------- | ------------------ | ------------------ | ------------------ | -------------------------------------------- | ----------- |
-| v0.2.3-5bf313f       |                    |                    |                    |                                              | 2021-10-18  |
-| v0.3.7-1941e85       | v0.1.1-6a9f66c     | v0.1.1-4df8aa0     | v0.1.0-fc92dd9     |                                              | 2021-12-01  |
-| v0.3.8-c8a453d       | v0.2.0-1b93bf7     |                    |                    | v0.2.0-1b93bf7                               | 2021-12-30  |
-| v0.3.12_linux_amd64  | v0.2.2_linux_amd64 |                    |                    |                                              | 2022-03-22  |
-| v0.4.0_linux_amd64   | v0.3.0_linux_amd64 | v0.2.0_linux_amd64 | v0.2.0_linux_amd64 |                                              | 2022-03-23  |
-|                      |                    |                    |                    |                                              |             |
+```sh
+TARGET_GOARCH=arm64 ./publish.sh build image
+```
+
+以上命令中使用到了publish脚本，它提供了以下参数 `build`,`image`,`image-push`和`ALL`
+
+1. build: 用于构建可执行文件
+
+2. image: 用于在本地出镜像,可以修改`slime/bin/publish`中的默认的`hub`地址
+
+3. image-push: 将镜像推送至镜像仓库
+
+4. ALL: 以上三个个步骤的结合
+
+如，构建镜像并推至默认厂库
+
+```sh
+./publish.sh build image image-push
+
+# 等同于 ./publish.sh ALL
+```
+
+### 构建多架构镜像
+
+切换至子模块所在目录,运行以下命令构建多架构镜像,默认hub地址在 `slime/bin/publish`中定义
+
+```sh
+./publish.sh publish amd64 arm64
+```
+
+## 构建包含全部功能的slime镜像
+
+### 构建amd64镜像
+
+切换至 slime/modules/bundle_example 目录, 运行以下命令构建bundle的amd64镜像
+
+```sh
+./publish.sh build image
+```
+
+### 构建多架构镜像
+
+切换至 slime/modules/bundle_example 目录,运行以下命令构建多架构镜像
+
+```sh
+./publish.sh publish amd64 arm64
+```

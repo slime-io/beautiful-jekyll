@@ -1,46 +1,8 @@
----
-layout: post
-title: Slime2022展望：把Istio的复杂性塞入智能的黑盒
-subtitle: 站在2022年初的时间点，Slime 如何助力 Istio 智能化，本文一探究竟
-cover-img: /assets/img/cover/galaxy-3.jpg
-thumbnail-img: /assets/img/thumbnail/tree-1.jpg
-share-img: /assets/img/thumbnail/tree-1.jpg
-tags: [overview]
-categories: overview
----
-
-
-- [一、导读](#一导读)
-- [二、懒加载](#二懒加载)
-    - [2.1 背景](#21-背景)
-    - [2.2 价值](#22-价值)
-    - [2.3 动态配置更新](#23-动态配置更新)
-    - [2.4 静态配置增强](#24-静态配置增强)
-    - [2.5 Metric类型](#25-metric类型)
-    - [2.6 使用模式](#26-使用模式)
-- [三、智能限流](#三智能限流)
-    - [3.1 背景](#31-背景)
-    - [3.2 价值](#32-价值)
-    - [3.3 实现](#33-实现)
-    - [3.4 本地限流](#34-本地限流)
-    - [3.5 全局均分限流](#35-全局均分限流)
-    - [3.6 全局共享限流](#36-全局共享限流)
-    - [3.7 自适应限流](#37-自适应限流)
-- [四、项目架构](#四项目架构)
-- [五、展望](#五展望)
-    - [5.1 懒加载规划](#51-懒加载规划)
-    - [5.2 智能限流规划](#52-智能限流规划)
-    - [5.3 新模块规划](#53-新模块规划)
-
-
-
-
-
 ## 一、导读
 
 网易数帆轻舟微服务团队很早就开始使用 Istio 做服务网格。在实践过程中，我们开发了很多 Istio 周边模块，方便了自身及网易集团内部客户使用 Istio 。为了回馈社区，我们系统整理了这些模块，并选择了一部分，在2021年初开源出 [Slime 项目](https://github.com/slime-io/slime)。
 
-<img src="../../assets/img/blog-slime-overview-2021/slime_logo.png"  />
+<img src="../../assets/blog-slime-overview-2021/slime_logo.png"  />
 
 Slime 项目旨在解决 Istio 使用上的痛点，方便用户使用 Istio 的高级功能，并始终坚持**可以无缝对接Istio，无需任何的定制化改造**的原则，极大降低了使用门槛。
 
@@ -60,7 +22,7 @@ Istio 的全量推送性能问题，是所有 Istio 使用者都要面对的问�
 
 众所周知，早期 Istio 的配置下发非常粗糙，直接全量推送。这意味着，随着服务网格中业务规模的不断扩大，控制面需要下发的内容越来越多，数据面需要接收的内容也不断增长，这必然带来性能问题。集群中往往有多个业务系统。一个业务系统的应用感知所有业务系统的配置，这意味着推送大量冗余配置，也是不合理的。如下图左侧所示，A 只和 B 有关系，却被推送了 C 和 D 的配置。 另一个问题是，推送的频率会很高。当一个服务发生变化，控制面要通知数据面所有SidecarProxy。
 
-<img src="../../assets/img/blog-slime-overview-2021/istio-sidecarscope.png"  />
+<img src="../../assets/blog-slime-overview-2021/istio-sidecarscope.png"  />
 
 
 
@@ -105,7 +67,7 @@ Istio 提供的 SidecarScope 可以解决配置全量下发的问题，看起来
 
 
 
-<img src="../../assets/img/blog-slime-overview-2021/lazyload-core.png"  />
+<img src="../../assets/blog-slime-overview-2021/lazyload-core.png"  />
 
 
 
@@ -119,7 +81,7 @@ Istio 提供的 SidecarScope 可以解决配置全量下发的问题，看起来
 
 详细的流程图如下
 
-<img src="../../assets/img/blog-slime-overview-2021/lazyload-arch-v2.png"  />
+<img src="../../assets/blog-slime-overview-2021/lazyload-arch-v2.png"  />
 
 其中 ServiceFence 是懒加载中引入的 CRD，作用是存储与服务相关的 Metric，实现 SidecarScope 的更新。详细的介绍可参考 [懒加载教程-架构](https://github.com/slime-io/lazyload/blob/master/lazyload_tutorials_zh.md#%E6%9E%B6%E6%9E%84)
 
@@ -139,7 +101,7 @@ Istio 提供的 SidecarScope 可以解决配置全量下发的问题，看起来
 
 此处以 label 匹配举个例子，假如应用部署如下图所示
 
-<img src="../../assets/img/blog-slime-overview-2021/lazyload-static-config-example.png"  />
+<img src="../../assets/blog-slime-overview-2021/lazyload-static-config-example.png"  />
 
 现在为服务 productpage 启用懒加载，已知 productpage 的依赖规则为
 
@@ -199,7 +161,7 @@ spec:
 
 在2.3章节中，我们解释了 Metric 是动态依赖关系生成的根本。目前懒加载支持的 Metric 类型有两个：Prometheus 和 AccessLog 。
 
-<img src="../../assets/img/blog-slime-overview-2021/lazyload-metric-modes.png"  />
+<img src="../../assets/blog-slime-overview-2021/lazyload-metric-modes.png"  />
 
 使用 Prometheus Mode，指标由各个业务应用的 SidecarProxy 产生。Lazyload Controller 查询 Prometheus 获取指标。此模式需要服务网格对接 Prometheus。
 
@@ -211,7 +173,7 @@ spec:
 
 懒加载模块有两种使用模式，Namespace 模式和 Cluster 模式。两种模式中，Lazyload Controller 都是全局唯一的，不同点在于前者的 Global-sidecar 是 Namespace 级别，后者是 Cluster 级别。如下图所示
 
-<img src="../../assets/img/blog-slime-overview-2021/lazyload-deploy-modes.png"  />
+<img src="../../assets/blog-slime-overview-2021/lazyload-deploy-modes.png"  />
 
 对于 N 个 Namespace，Namespace 模式的懒加载组件数是 O(N)，Cluster 模式则是 O(1)。现在我们更推荐使用 Cluster 模式。如上图所示，每个集群只需要部署两个 Deployment，简洁明了。
 
@@ -250,7 +212,7 @@ spec:
 
 限流模块架构如下
 
-<img src="../../assets/img/blog-slime-overview-2021/limiter-arch.png"  />
+<img src="../../assets/blog-slime-overview-2021/limiter-arch.png"  />
 
 红色是本地限流，绿色是全局均分限流，而蓝色是全局共享限流。详细的介绍可参考 [智能限流教程 - 架构](https://github.com/slime-io/limiter/blob/master/README_ZH.md#%E6%9E%B6%E6%9E%84)
 
@@ -379,7 +341,7 @@ spec:
 
 
 
-<img src="../../assets/img/blog-slime-overview-2021/slime-arch-v2.png"  />
+<img src="../../assets/blog-slime-overview-2021/slime-arch-v2.png"  />
 
 
 
