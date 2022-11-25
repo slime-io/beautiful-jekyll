@@ -2,23 +2,25 @@
 
 ### 安装Limiter模块
 
-前提：在部署limiter模块前需要安装`CRD`和`deployment/slime-boot`, 参考[slime-boot 安装](https://raw.githubusercontent.com/slime-io/slime/master/doc/zh/slime-boot.md) 指引安装安装`SlimeBoot CRD`和`deployment/slime-boot`
+前提：在部署limiter模块前需要安装`CRD`和`deployment/slime-boot`, 按照 [slime-boot 安装](https://github.com/slime-io/slime/blob/master/doc/zh/slime-boot.md#准备) 指引, 安装`SlimeBoot CRD`和`deployment/slime-boot`
 
-在`CRD`和`deployment/slime-boot`安装成功后，用户可手动应用以下yaml清单，安装支持单机和均分limiter模块 [limiter](https://github.com/slime-io/slime/blob/master/staging/src/slime.io/slime/modules/limiter/install/limiter.yaml)， 在该份部署清单中我们只提供了的单机限流和均分限流
+在`CRD`和`deployment/slime-boot`安装成功后，用户可手动应用以下清单，安装支持单机和均分限流功能的 [limiter](https://github.com/slime-io/slime/blob/master/staging/src/slime.io/slime/modules/limiter/install/limiter.yaml) 模块，
 
-**如需支持全局共享限流**，请阅读[安装 Rls & Redis](#安装-RLS-&-Redis), 以及安装支持全局、单机、均分限流的limiter模块，[limiter-global](https://github.com/slime-io/slime/blob/master/staging/src/slime.io/slime/modules/limiter/install/limiter-global.yaml)
+**如需支持全局共享限流功能**，请先安装 [安装 Rls & Redis](#rls-redis), 以及重新下发支持全局限流、单机限流和均分限流功能的 [limiter-global](https://github.com/slime-io/slime/blob/master/staging/src/slime.io/slime/modules/limiter/install/limiter-global.yaml) 的模块，
 
-如需要支持自适应限流，请跳转文末安装 prometheus
+如需要支持自适应限流，请先安装 [prometheus](#prometheus)
 
 ## 使用场景
-
-smarlimiter 定义见 [proto](https://raw.githubusercontent.com/slime-io/slime/master/staging/src/slime.io/slime/modules/limiter/api/v1alpha2/smart_limiter.proto)
+                          
+smarlimiter 定义见 [proto](https://github.com/slime-io/slime/blob/master/staging/src/slime.io/slime/modules/limiter/api/v1alpha2/smart_limiter.proto)
 
 **注意**： 网格场景下，每个服务只能创建一个SmartLimiter资源，其name和namespace对应着服务的service的name和namespace
 
 ### 网格场景单机限流
 
-- 入方向限流：服务入方向进行限流，即A->B, 在B段入口方向对请求进行限流判断
+#### 入方向限流
+
+服务入方向进行限流，即A->B, 在B段入口方向对请求进行限流判断
 
 以下smartlimiter表示，对reviews服务的入方向9080端口进行限流，限流规则是100次/60秒
 
@@ -42,7 +44,9 @@ spec:
           port: 9080
 ```
 
-- 出方向限流：服务出方向进行限流，即A->B, 在A段出口方向对B的请求进行限流判断
+#### 出方向限流
+
+服务出方向进行限流，即A->B, 在A段出口方向对B的请求进行限流判断
 
 以下smartlimiter表示，在productpage服务的出方向限流，即访问路由reviews.default.svc.cluster.local:80/default时进行限流判断，限流规则是2次/10秒
 
@@ -68,11 +72,13 @@ spec:
           - reviews.default.svc.cluster.local:80/default
 ```
 
-- 网格场景带match的限流
+#### 网格场景带match的限流
 
 在很多场景下，我们希望对带有某个header的请求进行限流
 
 以下smartlimiter表示，对于default下的productpage服务的9080端口，如果请求的header中包含foo=bar, 那么就进行限流，限流规则是 5次/60s
+
+网格场景下，带match的限流,除了支持Header的精确匹配，还支持正则匹配、前缀匹配、后缀匹配、存在性等功能，具体可参考[SmartLimitDescriptor](https://github.com/slime-io/slime/blob/c7ecc0291b4ad2b419d04a0a65122257c8ff15b6/staging/src/slime.io/slime/modules/limiter/api/v1alpha2/smart_limiter.proto)
 
 ```yaml
 apiVersion: microservice.slime.io/v1alpha2
@@ -93,11 +99,96 @@ spec:
         target:
           port: 9080
         match:
-         - name: foo
-           exact_match: bar
+        - name: foo
+          exact_match: bar
 ```
 
-网格场景带match的限流,除了支持Header的精确匹配，还支持正则匹配、前缀匹配、后缀匹配、存在性等功能，具体可参考[SmartLimitDescriptor](https://github.com/slime-io/slime/blob/c7ecc0291b4ad2b419d04a0a65122257c8ff15b6/staging/src/slime.io/slime/modules/limiter/api/v1alpha2/smart_limiter.proto)
+如果需要对请求方法进行限流, 如下设置
+
+```yaml
+apiVersion: microservice.slime.io/v1alpha2
+kind: SmartLimiter
+metadata:
+  name: productpage
+  namespace: default
+spec:
+  sets:
+    _base:
+      descriptor:
+      - action:
+          fill_interval:
+            seconds: 60
+          quota: "5"
+          strategy: "single"
+        condition: "true"
+        target:
+          port: 9080
+        match:
+        - name: :method
+          regex_match: GET
+```
+
+如果需要对path进行限流, 如下设置
+
+```yaml
+apiVersion: microservice.slime.io/v1alpha2
+kind: SmartLimiter
+metadata:
+  name: productpage
+  namespace: default
+spec:
+  sets:
+    _base:
+      descriptor:
+      - action:
+          fill_interval:
+            seconds: 60
+          quota: "5"
+          strategy: "single"
+        condition: "true"
+        target:
+          port: 9080
+        match:
+        - name: :path
+          prefix_match: /foo
+```
+如需对带有不同header的请求进行限流,如下配置
+
+```yaml
+apiVersion: microservice.slime.io/v1alpha2
+kind: SmartLimiter
+metadata:
+  name: productpage
+  namespace: default
+spec:
+  sets:
+    _base:
+      descriptor:
+      - action:
+          fill_interval:
+            seconds: 60
+          quota: "5"
+          strategy: "single"
+        condition: "true"
+        target:
+          port: 9080
+        match:
+        - name: foo
+          exact_match: bar
+      - action:
+          fill_interval:
+            seconds: 60
+          quota: "5"
+          strategy: "single"
+        condition: "true"
+        target:
+          port: 9080
+        match:
+          - name: foo1
+            exact_match: bar1
+```
+
+
 
 
 ### 网格场景全局均分限流
