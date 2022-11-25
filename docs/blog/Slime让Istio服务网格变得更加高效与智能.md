@@ -1,20 +1,3 @@
----
-layout: post
-title: Slime：让Istio服务网格变得更加高效与智能
-subtitle: Slime是网易数帆微服务团队开源的服务网格组件，旨在通过更为简单的配置实现Istio/Envoy的高阶功能。
-cover-img: /assets/img/path.jpg
-thumbnail-img: /assets/img/thumb.png
-share-img: /assets/img/path.jpg
-tags: [overview]
-categories: overview
----
-
-- [一、背景](#一背景)
-- [二、配置懒加载](#二配置懒加载)
-- [三、Http插件管理](#三http插件管理)
-- [四、自适应限流](#四自适应限流)
-- [五、小结](#五小结)
-
 ## 一、背景
 
 服务网格作为新一代微服务架构，采用sidecar模式，实现了业务逻辑和微服务治理逻辑的物理解耦，降低微服务框架的开发与运维成本。权责清晰，易维护，可观测，多语言支持等一些列优势使其逐渐成为微服务话题中的焦点。而Istio+Envoy作为其使用最为广泛的实现一直占据着C位，背靠Google的大树，Istio已隐隐具备了成为业界标准的趋势。
@@ -36,19 +19,19 @@ categories: overview
 1. 使数据面收到大量冗余配置 a) Envoy启动时间变长 b) Envoy内存开销增加 c) 占据Envoy主线程，阻塞Pilot事件推送
 2. 增加控制面处理推送事件复杂度 a) Pilot推送时内存增加，易引发OOM b) 配置下发时延增加 为了使Istio能支持一定量级的集群，我们不得不事先要求业务方在服务发布时，告知该服务所依赖的服务，并以此设置SidecarScope屏蔽无关服务的配置和服务发现信息。但是在推行过程中却遇到了阻力，一方面是依赖服务的信息不好获取，另一方面一旦业务方配置有误，会导致调用出现问题。这个规定使得原本想要上网格的业务变得望而却步。
 
-![](../../assets/img/blog-1-overview/1.jpg)
+![](../../assets/blog-1-overview/1.jpg)
 
 有什么办法可以使服务按需获取配置呢？最容易想到的是从服务调用关系中获取该信息，但是在缺失被调用方服务发现信息的情况下，是无法成功访问的，这就会导致一些容错率低的服务不能接受这种方案，另一方面访问不成功时获得的服务调用关系也并不可靠。换而言之，如果有办法使服务在不具备被调用方配置信息和服务发现信息的情况下能够成功调用，就可以通过自动生成SidecarScope的方式实现配置懒加载（按需加载）。
 
 我们想到的办法是构建一条兜底路由，这条兜底路由的backend是一个全局共享的sidecar，我们称之为global-sidecar，它拥有全量的配置和服务发现信息。缺失服务发现信息的调用，都会被兜底路由劫持到global-sidecar，global-sidecar为其做二次代理，转发到对应的后端服务。
 
-![](../../assets/img/blog-1-overview/2.jpg)
+![](../../assets/blog-1-overview/2.jpg)
 
 
 
 global-sidecar在完成代理后会将服务调用信息上报给slime，slime根据调用信息更新Scope，首次调用后，服务便可感知到被调用方的信息，不再需要global-sidecar转发，如下图所示。
 
-![](../../assets/img/blog-1-overview/3.jpg)
+![](../../assets/blog-1-overview/3.jpg)
 
 
 
@@ -56,13 +39,13 @@ global-sidecar在完成代理后会将服务调用信息上报给slime，slime�
 
 
 
-![](../../assets/img/blog-1-overview/4.jpg)
+![](../../assets/blog-1-overview/4.jpg)
 
 
 
 ServiceFence也可以对生成的SidecarScope的生命周期做管理，可以自动清理长时间不用的调用关系。 当然上述这些CRD的生成和维护都是自动的，用户即不需要关心ServiceFence资源也不需要关心SidecarScope资源，只需要在Service上打上`istio.dependency.servicefence/status: "true"`的标签，表明该服务需要开启配置懒加载即可。
 
-![](../../assets/img/blog-1-overview/5.jpg)
+![](../../assets/blog-1-overview/5.jpg)
 
 
 
@@ -74,7 +57,7 @@ ServiceFence也可以对生成的SidecarScope的生命周期做管理，可以�
 
 LDS中的部分被我们抽象为PluginManager，我们可以通过enable选项启停插件。通过PluginManager也可以管理插件的执行优先级，其中的插件顺序和LDS插件链中的顺序是一致的，越靠前的插件执行优先级越高，如下图所示：
 
-![](../../assets/img/blog-1-overview/6.jpg)
+![](../../assets/blog-1-overview/6.jpg)
 
 
 
@@ -114,7 +97,7 @@ spec:
 
 EnvoyPlugin不关心每个插件的具体配置（具体配置会被放在type.struct结构中透传处理），它更关心的是插件生效范围，使用者可以将插件配置在需要的维度中做聚合，这样做一方面更加贴合插件使用者的习惯，另一方面也降低了上层配置的冗余，下图展示了EnvoyPlugin在xDS层面的映射关系，虽然xDS层面仍旧会展开，但至少在管理它们的时候，我们面对的是一个有序聚合的数组，而非一颗庞大的插件树。
 
-![](../../assets/img/blog-1-overview/7.jpg)
+![](../../assets/blog-1-overview/7.jpg)
 
 
 
@@ -124,7 +107,7 @@ EnvoyPlugin不关心每个插件的具体配置（具体配置会被放在type.s
 
 为了解决Istio中服务限流的短板，我们开发了自适应限流模块，在易用性方面，我们也为其设计了一套新的API——SmartLimiter。自适应限流的主体架构分为两部分，一部分为SmartLimiter到EnvoyFilter的转换逻辑，另一部分为监控数据获取。目前slime支持从K8S metric-server获取服务的CPU，Memory，副本数等数据，当然我们也对外提供了一套监控数据对接接口（Metric Discovery Server），通过MDS，可以将自定义的监控指标同步给限流组件。
 
-![](../../assets/img/blog-1-overview/8.jpg)
+![](../../assets/blog-1-overview/8.jpg)
 
 SmartLimiter的配置是比较接近自然语义的，例如希望在CPU超过80%时触发服务A的访问限制，限额为30QPS，对应的SmartLimiter定义如下：
 
@@ -145,7 +128,7 @@ spec:
 
 最终产生的限流行为，如下图所示：
 
-![](../../assets/img/blog-1-overview/9.jpg)
+![](../../assets/blog-1-overview/9.jpg)
 
 
 

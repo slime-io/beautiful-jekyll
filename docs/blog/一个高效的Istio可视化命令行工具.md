@@ -1,22 +1,3 @@
----
-layout: post
-title: I9s：一个高效的Istio可视化命令行工具
-subtitle: i9s介绍与使用说明
-cover-img: /assets/img/path.jpg
-thumbnail-img: /assets/img/path.jpg
-share-img: /assets/img/path.jpg
-tags: [overview]
-categories: overview
----
-
-- [项目信息](#项目信息)
-- [运维场景](#运维场景)
-- [i9s介绍](#i9s介绍)
-- [运行](#运行)
-- [使用说明](#使用说明)
-- [Release && 视频教程](#release--视频教程)
-- [展望](#展望)
-
 ## 项目信息
 
 目前`i9s`已经开源，项目开源地址: [i9s](https://github.com/slime-io/i9s) 。开发`i9s`的初衷是提高服务网格的运维效率，我们希望有一款工具可以便捷的查看`istio`和`envoy`的调试接口, 最好像`k9s`操作`pods`资源那样简单 。得益于`k9s`代码的可扩展性，我们基于[k9s-v0.25.18](https://github.com/derailed/k9s/releases/tag/v0.25.18)，提供了`istio` `envoy` 调试接口查看能力。
