@@ -6,7 +6,7 @@
 
 ### 安装 slime-boot
 
-安装懒加载前，需要先安装 `SlimeBoot CRD`， `ServiceFence CRD`和`deployment/slime-boot`。这一步是为了准备好懒加载需要的 CRD 以及懒加载模块的启动器。不同 k8s 版本的安装文件略有u区别，详见 [SlimeBoot 介绍与使用 - 准备](../slime-boot/tutorial.md) 。
+安装懒加载前，需要先安装 `SlimeBoot CRD`， `ServiceFence CRD`和`deployment/slime-boot`。这一步是为了准备好懒加载需要的 CRD 以及懒加载模块的启动器。不同 k8s 版本的安装文件略有区别，详见 [SlimeBoot 介绍与使用 - 准备](../slime-boot/tutorial.md) 。
 
 此处我们假设 k8s version 为1.16+
 
@@ -209,7 +209,7 @@ spec:
 
 
 
-第一次访问productpage，并使用`kubectl logs -f productpage-xxx -c istio-proxy -n default`观察访问日志。
+第一次访问productpage，使用`kubectl logs -f productpage-xxx -c istio-proxy -n default`观察envoy访问日志。
 
 ```
 [2021-12-23T06:24:55.527Z] "GET /details/0 HTTP/1.1" 200 - via_upstream - "-" 0 178 12 12 "-" "curl/7.52.1" "7ec25152-ca8e-923b-a736-49838ce316f4" "details:9080" "172.17.0.10:80" outbound|9080||global-sidecar.mesh-operator.svc.cluster.local 172.17.0.11:45194 10.102.66.227:9080 172.17.0.11:40210 - -
@@ -221,7 +221,7 @@ spec:
 
 可以看出，此次outbound后端访问global-sidecar.mesh-operator.svc.cluster.local。
 
-观察servicefence
+观察servicefence的stataus.metricStatus字段，可以观察到服务间调用关系已经生成
 
 ```sh
 $ kubectl get servicefence productpage -n default -oyaml
@@ -253,7 +253,7 @@ status:
 
 
 
-观察sidecar
+观察sidecar，可以看到spec.egress.host字段中添加了detail和review服务信息
 
 ```sh
 $ kubectl get sidecar productpage -n default -oyaml
@@ -335,7 +335,13 @@ kubectl delete ns mesh-operator
 
 懒加载支持自动监听集群内服务端口信息，并为所有端口启用懒加载，这样就无需手动指定服务端口列表。
 
-懒加载模块配置参数`general.autoPort`是开关，等于true，启动端口自动纳管，等于false或者不指定，则手动管理。兼容之前版本，`general.wormholePort`中手动指定的端口也会被懒加载纳管。为了安全，自动纳管时，端口**只会自动增加**。如果需要缩减端口范围，切换到手动模式，或自动模式下重启懒加载。懒加载遵循Istio对端口协议的判断逻辑（端口名以“HTTP, HTTP2, GRPC, GRPCWeb”开头），只感知HTTP协议的端口变化。
+在SlimeBoot中配置懒加载相关参数:
+
+`general.autoPort：true`，启动端口自动纳管，等于false或者不指定，则手动管理。兼容之前版本
+
+`general.wormholePort`中手动指定的端口也会被懒加载纳管。
+
+为了安全，自动纳管时，端口**只会自动增加**。如果需要缩减端口范围，请切换到手动模式，或自动模式下重启懒加载。懒加载遵循Istio对端口协议的判断逻辑（端口名以“HTTP, HTTP2, GRPC, GRPCWeb”开头），只感知HTTP协议的端口变化。
 
 样例：
 
@@ -361,11 +367,11 @@ spec:
 
 
 
-
-
 ### 基于Accesslog开启懒加载
 
-指定SlimeBoot CR资源中`spec.module.global.misc.metricSourceType`等于`accesslog`会使用Accesslog获取服务调用关系，等于`prometheus`则使用Prometheus。
+指定SlimeBoot CR资源 `spec.module.global.misc.metricSourceType:accesslog`,使用Accesslog获取服务调用关系
+
+或者设置`spec.module.global.misc.metricSourceType:prometheus`，使用Prometheus获取服务间调用关系。
 
 使用Accesslog获取服务调用关系的大概过程：
 
@@ -414,8 +420,8 @@ spec:
       kind: lazyload
       enable: true
       general:
-        autoFence: true # true为自动模式，false为手动模式，默认为手动模式
-        defaultFence: true # 自动模式下默认行为，true为创建servicefence，false为不创建，默认不创建
+        autoFence: true # true为自动模式，false 为手动模式，默认为手动模式
+        defaultFence: true # 自动模式下的默认行为，true时，什么都不指定也会生成servicefence，false时只有打上注解的才会开启
   # ...
 ```
 
@@ -423,7 +429,7 @@ spec:
 
 #### 自动模式
 
-当`autoFence`参数为`true`时，进入自动模式。自动模式下，启用懒加载的服务范围，通过三个维度调整。
+当`autoFence: true`时，进入自动模式。自动模式下，启用懒加载的服务范围，通过三个维度调整。
 
 Service级别 - label `slime.io/serviceFenced`
 
@@ -456,7 +462,7 @@ Namespace级别 - label `slime.io/serviceFenced`
 > Namespace `testns`下有三个服务： `svc1`, `svc2`, `svc3`
 
 * 当`autoFence`为`true`且`defaultFence`为`true`时，自动生成以上三个服务的ServiceFence
-* 给Namespace testns加上Label `slime.io/serviceFenced: "false"`， 所有ServiceFence消失
+* 给Namespace testns加上Label `slime.io/serviceFenced: "false"`， 所有testns下的ServiceFence消失
 * 给`svc1`打上 `slime.io/serviceFenced: "true"` label： 服务`svc1`的ServiceFence创建
 * 删掉Namespace和Service上的label：恢复三个ServiceFence
 
@@ -489,9 +495,7 @@ metadata:
 
 #### 手动模式
 
-当`autoFence`参数为`false`时，启用懒加载为手动模式，需要用户手动创建ServiceFence资源。这种启用是Service级别的。
-
-
+当`autoFence`参数为`false`时，启用懒加载为手动模式，需要用户手动创建ServiceFence资源, 手动模块下只支持Service级别。
 
 
 
@@ -500,7 +504,6 @@ metadata:
 lazyload/fence默认会将envoy无法匹配路由（缺省）的流量兜底发送到global sidecar，应对短暂服务数据缺失的问题，这是“懒加载”所必然面对的。 该方案因为技术细节上的局限性，对于目标（如域名）是集群外的流量，无法正常处理，详见 [[Configuration Lazy Loading]: Failed to access external service #3](https://github.com/slime-io/slime/issues/3)。
 
 基于这个背景，设计了本特性，同时也能用于更灵活的业务场景。 大致思路是通过域名匹配的方式将不同的缺省流量分派到不同的目标做正确处理。
-
 
 
 配置样例：
@@ -545,11 +548,9 @@ module:
 
 
 
-
-
 ### 添加静态服务依赖关系
 
-懒加载除了从slime metric处根据动态指标更新服务依赖关系，还支持通过`serviceFence.spec`添加静态服务依赖关系。支持三种细分场景：依赖某个服务、依赖某个namespace所有服务、依赖具有某个label的所有服务。
+懒加载除了从slime metric(accesslog/prometheus metric)处根据动态指标更新服务依赖关系，还支持通过`serviceFence.spec`添加静态服务依赖关系。支持三种细分场景：依赖某个服务、依赖某个namespace所有服务、依赖具有某个label的所有服务。
 
 
 
@@ -565,8 +566,7 @@ spec:
   enable: true
   host:
     reviews.default.svc.cluster.local: # static dependenct of reviews.default service
-      stable:
-
+      stable: {}
 # related sidecar
 spec:
   egress:
