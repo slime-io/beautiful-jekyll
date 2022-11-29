@@ -7,29 +7,29 @@
 
 过程说明：
 
-1. 部署Lazyload模块，自动创建global-sidecar应用，Istiod会为global-sidecar应用添加标准sidecar（envoy）
+1. 部署Lazyload模块，自动创建global-sidecar应用，Istiod会为global-sidecar应用注入标准sidecar（envoy）
 
-3. 为服务A启用懒加载
+2. 为服务A启用懒加载：
 
-   3.1 创建ServiceFence A
+    2.1 创建ServiceFence A
 
-   3.2 创建Sidecar（Istio CRD）A，根据静态配置（ServiceFence.spec）初始化
+    2.2 创建Sidecar（Istio CRD）A，根据静态配置（ServiceFence.spec）初始化
 
-   3.3 ApiServer感知到Sidecar A创建
+    2.3 ApiServer感知到Sidecar A创建
 
-4. Istiod从ApiServer获取Sidecar A的内容
+3. Istiod从ApiServer获取Sidecar A的内容
 
-5. Istiod下发Sidecar A限定范围内的配置给Service A的sidecar
+4. Istiod下发Sidecar A限定范围内的配置给Service A的sidecar
 
-6. Service A发起访问Service B，由于Service A没有Service B的配置信息，请求发到global-sidecar的sidecar
+5. Service A发起访问Service B，由于Service A没有Service B的配置信息，请求发到global-sidecar的sidecar
 
 6. global-sidecar处理
 
-   6.1 入流量拦截，如果是accesslog模式，sidecar会生成包含服务调用关系的accesslog
+    6.1 入流量拦截，如果是accesslog模式，sidecar会生成包含服务调用关系的accesslog
 
-   6.2 global-sidecar应用根据请求头等信息，转换访问目标为Service B
+    6.2 global-sidecar根据请求头等信息，转换访问目标为Service B （转发）
 
-   6.3 出流量拦截，sidecar拥有所有服务配置信息，找到Service B目标信息，发出请求
+    6.3 出流量拦截，因为sidecar拥有所有服务配置信息，所以可以找到Service B目标信息，正确的发出请求
 
 7. 请求正确到达Service B
 
@@ -39,11 +39,11 @@
 
 10. lazyload更新懒加载配置
 
-    10.1 更新ServiceFence A，添加关于B的metric
+     10.1 更新ServiceFence A，添加关于A访问B的metric
 
-    10.2 更新Sidecar A，egress.hosts添加B信息
+     10.2 更新Sidecar A： egress.hosts添加服务B的信息
 
-    10.3 ApiServer 感知到Sidecar A更新
+     10.3 ApiServer 感知到Sidecar A更新
 
 11. Istiod从ApiServer获取Sidecar A新内容
 
