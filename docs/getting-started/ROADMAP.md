@@ -22,9 +22,9 @@
 
 - 支持快速生成 Slime 空白新模块
 
-- 支持打多架构镜像
+- 支持多架构镜像
 
-
+详见 [v0.4.0](https://github.com/slime-io/slime/releases/tag/v0.4.0)
 
 ## 二、Slime v0.5.0（已发布）
 
@@ -47,39 +47,32 @@
 - 插件管理模块支持了 wasm extension 和 hango Rider Extension
 - 适配 Kubernetes 1.22+
 
+详见 [v0.5.0](https://github.com/slime-io/slime/releases/tag/v0.5.0)
 
-
-## 三、Slime v0.6.0（规划中）
-
-**运维管理**
-
-- 【排障】发布新模块，用于 istio 排障
-- 【配置懒加载】支持 ServiceEntry 服务
-- 【i9s】提供通用扩展接口
+## 三、Slime v0.6.0（已发布）
 
 **扩展管理**
 
-- 【注册中心】发布新模块，用于对接多注册中心
+- 【注册中心】发布新模块meshregistry，用于对接多注册中心
+
+**运维管理**
+- 【i9s】提供通用扩展接口
 
 **工程**
 
 - 规范issue处理、pr处理、发版、社区会议机制等内容
 - 完善教程，帮助新用户加入社区
 
-**产品化**
-
-- 【UI】新增 UI 模块，实现资源 CRUD
-
-
-
+详见 [v0.6.0](https://github.com/slime-io/slime/releases/tag/v0.6.0)
 
 ## 四、Slime v0.7.0（规划中）
 
 **流量管理**
-
+- 【配置懒加载】支持 ServiceEntry 服务
 - 【智能熔断】发布服务网格熔断标准 API
 - 【智能熔断】发布智能熔断新特性
 - 【插件管理】支持服务级别插件下发
+
 
 **运维管理**
 
@@ -87,8 +80,8 @@
 
 **产品化**
 
+- 【UI】新增 UI 模块，实现资源 CRUD
 - 【UI】展示上下游资源关联性
-
 
 
 ## 五、Slime v0.8.0（规划中）

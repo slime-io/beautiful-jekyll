@@ -11,6 +11,7 @@ nav:
     
       - Slime-Boot:
         - 教程: user-guide/slime-boot/tutorial.md
+        - 特性: user-guide/slime-boot/feature.md
 
       - Lazyload: 
         - 概述: user-guide/lazyload/overview.md
@@ -29,7 +30,13 @@ nav:
         - 架构: user-guide/plugin/arch.md
         - 特性: user-guide/plugin/features.md
         - 教程: user-guide/plugin/tutorial.md
-        
+
+      - Meshregistry:
+          - 概述: user-guide/meshregistry/overview.md
+          - 架构: user-guide/meshregistry/arch.md
+          - 特性: user-guide/meshregistry/features.md
+          - 教程: user-guide/meshregistry/tutorial.md
+
       - I9s: 
         - 概述: user-guide/i9s/overview.md
         - 架构: user-guide/i9s/arch.md
@@ -40,11 +47,13 @@ nav:
         - 教程: user-guide/slime-boot/tutorial.md
 
     - Blog:
+      - Slime开发者指南: blog/开发者指南.md
       - 一个高效的Istio可视化命令行工具: blog/一个高效的Istio可视化命令行工具.md
       - Slime让Istio服务网格变得更加高效与智能: blog/Slime让Istio服务网格变得更加高效与智能.md
       - 把Istio的复杂性塞入智能的黑盒: blog/把Istio的复杂性塞入智能的黑盒.md
 
     - 版本发布:
+        - v0.6.0: release/v0.6.0.md
         - v0.5.0: release/v0.5.0.md
         - v0.4.0: release/v0.4.0.md
 
