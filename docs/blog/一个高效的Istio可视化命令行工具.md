@@ -98,7 +98,7 @@ i9s
 
 ## Release && 视频教程
 
-版本 [release](https://github.com/slime-io/i9s/releases/tag/v0.0.1-i9s)
+版本 [release](https://github.com/slime-io/i9s/releases)
 
 `i9s`介绍和使用说明 [视频](https://www.bilibili.com/video/BV1JZ4y1Y71i?pop_share=1&vd_source=00e91b5259369c7e4fedda13d49048d8)
 
