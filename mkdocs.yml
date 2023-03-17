@@ -1,6 +1,6 @@
 INHERIT: nav.yml
 
-site_name: ' '
+site_name: 'Slime'
 repo_url: https://github.com/slime-io/slime
 repo_name: slime
 site_description: Slime Documentation
