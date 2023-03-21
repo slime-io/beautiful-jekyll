@@ -10,7 +10,7 @@ extra_css:
 theme:
   name: material
   language: zh
-  logo: assets/slime-logo.png
+  logo: assets/slime-logo-home.png
   favicon: assets/todo.png
   custom_dir: overrides
   icon:
