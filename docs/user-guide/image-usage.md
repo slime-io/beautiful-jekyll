@@ -40,9 +40,10 @@ TARGET_GOARCH=arm64 ./publish.sh build image
 # 等同于 ./publish.sh ALL
 ```
 
+
 ### 构建多架构镜像
 
-切换至子模块所在目录,运行以下命令构建多架构镜像,默认hub地址在 `slime/bin/publish`中定义
+切换至子模块所在目录,运行以下命令构建多架构镜像,默认hub地址在 `slime/bin/publish.sh` 中定义
 
 ```sh
 ./publish.sh publish amd64 arm64
@@ -52,7 +53,8 @@ TARGET_GOARCH=arm64 ./publish.sh build image
 
 ### 构建amd64镜像
 
-切换至 slime/modules/bundle_example 目录, 运行以下命令构建bundle的amd64镜像
+切换至 slime/staging/src/slime.io/slime/modules/bundle-all 目录, 运行以下命令构建bundle的amd64镜像
+
 
 ```sh
 ./publish.sh build image
@@ -60,7 +62,7 @@ TARGET_GOARCH=arm64 ./publish.sh build image
 
 ### 构建多架构镜像
 
-切换至 slime/modules/bundle_example 目录,运行以下命令构建多架构镜像
+切换至 slime/staging/src/slime.io/slime/modules/bundle-all 目录,运行以下命令构建多架构镜像
 
 ```sh
 ./publish.sh publish amd64 arm64
