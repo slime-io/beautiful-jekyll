@@ -15,7 +15,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-limiter
-    tag: v0.6.0_linux_amd64
+    tag: v0.7.0
   module:
     - name: limiter
       kind: limiter
@@ -24,11 +24,6 @@ spec:
         disableGlobalRateLimit: true
         disableAdaptive: true
         disableInsertGlobalRateLimit: true
-      global:
-        log:
-          logLevel: info
-        configSources:
-          - address: ss:// 
         misc:
           enable-leader-election: "on"  #多副本
 ```

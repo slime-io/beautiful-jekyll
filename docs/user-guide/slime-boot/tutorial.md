@@ -142,7 +142,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-bundle-example-all
-    tag: v0.6.0_linux_amd64
+    tag: v0.7.0
   module:
     - name: bundle
       enable: true
@@ -192,7 +192,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-lazyload
-    tag: v0.6.0_linux_amd64
+    tag: v0.7.0
   namespace: mesh-operator
   istioNamespace: istio-system
   module:
@@ -200,9 +200,9 @@ spec:
       kind: lazyload
       enable: true
       general:
-        autoPort: false
+        autoPort: true
         autoFence: true
-        defaultFence: false   
+        defaultFence: true
         wormholePort: # replace to your application service ports, and extend the list in case of multi ports
           - "9080"
       global:
@@ -218,21 +218,15 @@ spec:
       memory: 300Mi
     limits:
       cpu: 600m
-      memory: 600Mi        
+      memory: 600Mi
   component:
     globalSidecar:
       enable: true
       sidecarInject:
         enable: true # should be true
-        # mode definition:
-        # "pod": sidecar auto-inject on pod level, need provide labels for injection
-        # "namespace": sidecar auto-inject on namespace level, no need to provide labels for injection
-        # if globalSidecarMode is cluster, global-sidecar will be deployed in slime namespace, which does not enable auto-inject on namespace level, mode can only be "pod".
-        # if globalSidecarMode is namespace, depending on the namespace definition, mode can be "pod" or "namespace".
         mode: pod
         labels: # optional, used for sidecarInject.mode = pod
           sidecar.istio.io/inject: "true"
-          # istio.io/rev: canary # use control plane revisions
       resources:
         requests:
           cpu: 200m
@@ -242,7 +236,7 @@ spec:
           memory: 400Mi
       image:
         repository: docker.io/slimeio/slime-global-sidecar
-        tag: v0.6.0_linux_amd64
+        tag: v0.7.0
       probePort: 20000
 ```
 
@@ -271,7 +265,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-limiter
-    tag: v0.6.0_linux_amd64
+    tag: v0.7.0
   module:
     - name: limiter
       kind: limiter
@@ -280,11 +274,6 @@ spec:
         disableGlobalRateLimit: true
         disableAdaptive: true
         disableInsertGlobalRateLimit: true
-      global:
-        log:
-          logLevel: info
-        configSources:
-          - address: ss:// 
 ```
 
 ### plugin 安装样例
@@ -308,14 +297,11 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-plugin
-    tag: v0.6.0_linux_amd64
+    tag: v0.7.0
   module:
     - name: plugin
       kind: plugin
       enable: true
-      global:
-        log:
-          logLevel: info
 ```
 
 ### meshregistry安装样例
@@ -340,14 +326,11 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-meshregistry
-    tag: v0.6.0_linux_amd64
+    tag: v0.7.0
   module:
     - name: meshregistry
       kind: meshregistry
       enable: true
-      global:
-        log:
-          logLevel: info
       general:
         LEGACY:
           MeshConfigFile: ""
@@ -387,8 +370,8 @@ metadata:
 spec:
   image:
     pullPolicy: Always
-    repository: docker.io/slimeio/slime-bundle-example-all
-    tag: v0.6.0_linux_amd64
+    repository: docker.io/slimeio/slime-bundle-all
+    tag: v0.7.0
   module:
     - name: bundle
       enable: true
@@ -405,18 +388,16 @@ spec:
       global:
         log:
           logLevel: info
-        configSources:
-        - address: ss://
     - name: bundle #与上面的name一致TODO
       kind: lazyload
       enable: true
       mode: BundleItem
       general:
-        autoPort: false
+        autoPort: true
         autoFence: true
-        defaultFence: false
+        defaultFence: true
         wormholePort: # replace to your application service ports, and extend the list in case of multi ports
-        - "9080"
+          - "9080"
       global:
         misc:
           globalSidecarMode: cluster # the mode of global-sidecar
@@ -433,7 +414,7 @@ spec:
     - name: plugin
       kind: plugin
       enable: true
-      mode: BundleItem   
+      mode: BundleItem
     - name: meshregistry
       kind: meshregistry
       enable: true
@@ -444,7 +425,7 @@ spec:
           RevCrds: ""
           Mcp: {}
           K8SSource:
-            Enabled: false   
+            Enabled: false
   component:
     globalSidecar:
       replicas: 1
@@ -463,7 +444,7 @@ spec:
           memory: 400Mi
       image:
         repository: docker.io/slimeio/slime-global-sidecar
-        tag: v0.6.0_linux_amd64
+        tag: v0.7.0
       probePort: 20000 # health probe port
       port: 80 # global-sidecar default svc port
       legacyFilterName: true

@@ -8,12 +8,21 @@
 
 安装懒加载前，需要先安装 `SlimeBoot CRD`， `ServiceFence CRD`和`deployment/slime-boot`。这一步是为了准备好懒加载需要的 CRD 以及懒加载模块的启动器。不同 k8s 版本的安装文件略有区别，详见 [SlimeBoot 介绍与使用 - 准备](../slime-boot/tutorial.md) 。
 
-此处我们假设 k8s version 为1.16+
+**note** 需要注意的是如果网络无法访问，你可以在slime项目的`slime/install/init/`目录发现相关部署文件
 
-```sh
+- k8s version >= v1.22
+```shell
 export tag_or_commit=$(curl -s https://api.github.com/repos/slime-io/slime/tags | grep 'name' | cut -d\" -f4 | head -1)
 kubectl create ns mesh-operator
 kubectl apply -f "https://raw.githubusercontent.com/slime-io/slime/$tag_or_commit/install/init/crds-v1.yaml"
+kubectl apply -f "https://raw.githubusercontent.com/slime-io/slime/$tag_or_commit/install/init/deployment_slime-boot.yaml"
+```
+
+- k8s v1.16 <= version < 1.22
+```shell
+export tag_or_commit=$(curl -s https://api.github.com/repos/slime-io/slime/tags | grep 'name' | cut -d\" -f4 | head -1)
+kubectl create ns mesh-operator
+kubectl apply -f "https://raw.githubusercontent.com/slime-io/slime/$tag_or_commit/install/init/crds.yaml"
 kubectl apply -f "https://raw.githubusercontent.com/slime-io/slime/$tag_or_commit/install/init/deployment_slime-boot.yaml"
 ```
 
@@ -30,7 +39,8 @@ slime-boot-6f778b75cd-4v675       1/1     Running   0          26s
 创建 `SlimeBoot` CR
 
 ```sh
-$ echo 'apiVersion: config.netease.com/v1alpha1
+$ echo '
+apiVersion: config.netease.com/v1alpha1
 kind: SlimeBoot
 metadata:
   name: lazyload
@@ -39,44 +49,41 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-lazyload
-    tag: v0.5.0_linux_amd64
-  resources:
-    requests:
-      cpu: 300m
-      memory: 300Mi
-    limits:
-      cpu: 600m
-      memory: 600Mi
+    tag: v0.7.0
+  namespace: mesh-operator
+  istioNamespace: istio-system
   module:
-    - name: lazyload # custom value
-      kind: lazyload # should be "lazyload"
+    - name: lazyload
+      kind: lazyload
       enable: true
-      general: # replace previous "fence" field
-        autoPort: false
+      general:
+        autoPort: true
         autoFence: true
-        defaultFence: false
+        defaultFence: true   
         wormholePort: # replace to your application service ports, and extend the list in case of multi ports
           - "9080"
       global:
         log:
           logLevel: info
         misc:
-          globalSidecarMode: cluster # inform the mode of global-sidecar
+          globalSidecarMode: cluster # the mode of global-sidecar
           metricSourceType: accesslog # indicate the metric source
+        slimeNamespace: mesh-operator
+  resources:
+    requests:
+      cpu: 300m
+      memory: 300Mi
+    limits:
+      cpu: 600m
+      memory: 600Mi        
   component:
     globalSidecar:
       enable: true
       sidecarInject:
         enable: true # should be true
-        # mode definition:
-        # "pod": sidecar auto-inject on pod level, need provide labels for injection
-        # "namespace": sidecar auto-inject on namespace level, no need to provide labels for injection
-        # if globalSidecarMode is cluster, global-sidecar will be deployed in slime namespace, which does not enable auto-inject on namespace level, mode can only be "pod".
-        # if globalSidecarMode is namespace, depending on the namespace definition, mode can be "pod" or "namespace".
         mode: pod
         labels: # optional, used for sidecarInject.mode = pod
           sidecar.istio.io/inject: "true"
-          # istio.io/rev: canary # use control plane revisions
       resources:
         requests:
           cpu: 200m
@@ -86,11 +93,11 @@ spec:
           memory: 400Mi
       image:
         repository: docker.io/slimeio/slime-global-sidecar
-        tag: v0.5.0_linux_amd64
+        tag: v0.7.0
       probePort: 20000
 ' > /tmp/lazyload-slimeboot.yaml
 
-$ kubectl apply -f /tmp/lazyload-slimeboot.yaml
+  kubectl apply -f /tmp/lazyload-slimeboot.yaml
 ```
 
 一些字段说明，可参考 [lazyload安装样例](../slime-boot/tutorial.md)
@@ -140,7 +147,17 @@ reviews-v3-84779c7bbc-gb52x       2/2     Running   0          60s
 
 ### 开启懒加载
 
-修改service的label，自动创建servicefence，为productpage服务启用懒加载
+由于我们在下发的slimeboot中指定了以下配置，所以默认情况下自动开启了懒加载
+
+```
+  autoPort: true
+  autoFence: true
+  defaultFence: true
+```
+
+如果`defaultFence: false`
+
+那么需要用户手动修改service的label，自动创建servicefence，为productpage服务启用懒加载
 
 ```sh
 $ kubectl label service productpage -n default slime.io/serviceFenced=true
@@ -316,7 +333,20 @@ $ kubectl delete -f "https://raw.githubusercontent.com/slime-io/slime/v0.5.0/ins
 卸载 lazyload
 
 ```sh
-$ kubectl delete -f /tmp/lazyload-slimeboot.yaml
+kubectl delete -f /tmp/lazyload-slimeboot.yaml
+kubectl get envoyfilter -n istio-system | grep to-global-sidecar && kubectl delete envoyfilter to-global-sidecar -n istio-system
+```
+
+卸载 servicefence
+
+```
+kubectl get svf -A |awk '{print "kubectl delete svf "$2" -n "$1" "}' |bash
+```
+
+确认集群中 svf已经清理完毕 
+
+```
+kubectl get svf -A
 ```
 
 卸载 slime-boot
@@ -328,6 +358,7 @@ kubectl delete -f "https://raw.githubusercontent.com/slime-io/slime/$tag_or_comm
 kubectl delete ns mesh-operator
 ```
 
+**note** 需要注意的是，如果手动修改过mesh-operator下存在一些envoyfilter和cm，可手动删除
 
 ## 特性介绍
 
@@ -801,7 +832,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-lazyload
-    tag: master-e5f2d83-dirty_1b68486
+    tag: v0.7.0
   module:
     - name: lazyload # custom value
       kind: lazyload # should be "lazyload"
@@ -818,7 +849,7 @@ spec:
             maxBackups: 10
             maxAgeDay: 10
             compress: true
-#...
+#... skip
   volumes:
     - name: lazyload-storage
       persistentVolumeClaim:
