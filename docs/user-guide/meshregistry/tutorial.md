@@ -24,33 +24,29 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-meshregistry
-    tag: v0.7.0
+    tag: v0.7.1
   module:
     - name: meshregistry
       kind: meshregistry
       enable: true
       general:
         LEGACY:
-          MeshConfigFile: ""
-          RevCrds: ""
-          Mcp: {}
-          K8SSource:
-            Enabled: false
-#          EurekaSource:
-#            Enabled: true
-#            Address:
-#              - "http://test/eureka"
-#            RefreshPeriod: 15s
-#            SvcPort: 80
-#          NacosSource:
-#            Enabled: true
-#            Address:
-#              - "http://test.com"
-#            Mode: polling
-#          ZookeeperSource:
-#            Enabled: true
-#            RefreshPeriod: 30s
-#            WaitTime: 10s
-#            Address:
-#              - zookeeper.test.svc.cluster.local:2181
+          NacosSource:
+            Enabled: true
+            RefreshPeriod: 30s
+            Address:
+              - "http://nacos.test.com"
+            Mode: polling
+          # EurekaSource:
+          #   Enabled: true
+          #   Address:
+          #   - "http://test/eureka"
+          #   RefreshPeriod: 15s
+          #   SvcPort: 80
+          # ZookeeperSource:
+          #   Enabled: true
+          #   RefreshPeriod: 30s
+          #   WaitTime: 10s
+          #   Address:
+          #   - zookeeper.test.svc.cluster.local:2181
 ```

@@ -49,7 +49,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-lazyload
-    tag: v0.7.0
+    tag: v0.7.1
   namespace: mesh-operator
   istioNamespace: istio-system
   module:
@@ -93,7 +93,7 @@ spec:
           memory: 400Mi
       image:
         repository: docker.io/slimeio/slime-global-sidecar
-        tag: v0.7.0
+        tag: v0.7.1
       probePort: 20000
 ' > /tmp/lazyload-slimeboot.yaml
 
@@ -832,7 +832,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-lazyload
-    tag: v0.7.0
+    tag: v0.7.1
   module:
     - name: lazyload # custom value
       kind: lazyload # should be "lazyload"

@@ -79,10 +79,21 @@
 **流量管理**
 
 - 【智能限流】限流模块支持workloadselector
+- 【智能限流】支持请求参数匹配条件
+- 【智能限流】持限流触发时，自定义响应头
 
 **扩展管理**
 
 - 【注册中心】支持对接开启认证的nacos，支持根据元数据筛选服务实例
+
+详见RELEASE NOTE [V0.7.0](https://github.com/slime-io/slime/releases/tag/v0.7.0)
+
+## Slime v0.7.1（发布中）
+
+- 优化处理了很多实践过程中遇到的问题
+
+详见RELEASE NOTE [V0.7.1](https://github.com/slime-io/slime/releases/tag/v0.7.1)
+
 
 ## Slime v0.8.0（规划中）
 
