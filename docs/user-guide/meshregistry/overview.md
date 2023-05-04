@@ -1,4 +1,3 @@
-
 ## 介绍
 
 `meshregistry`模块的角色大约为`serviceregistry`，它对接了多种服务注册中心，对不同的服务数据转换为统一的`ServiceEntry`数据（也即istio服务模型），然后以服务的方式通过指定协议提供给下游。

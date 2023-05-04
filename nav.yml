@@ -47,6 +47,7 @@ nav:
         - 教程: user-guide/slime-boot/tutorial.md
 
     - Blog:
+      - Slime化解服务网格多注册中心兼容之痛: blog/Slime化解服务网格多注册中心兼容之痛.md
       - Slime开发者指南: blog/开发者指南.md
       - 一个高效的Istio可视化命令行工具: blog/一个高效的Istio可视化命令行工具.md
       - Slime让Istio服务网格变得更加高效与智能: blog/Slime让Istio服务网格变得更加高效与智能.md
