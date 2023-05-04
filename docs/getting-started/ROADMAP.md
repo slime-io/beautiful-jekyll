@@ -88,7 +88,7 @@
 
 详见RELEASE NOTE [V0.7.0](https://github.com/slime-io/slime/releases/tag/v0.7.0)
 
-## Slime v0.7.1（发布中）
+## Slime v0.7.1（已发布）
 
 - 优化处理了很多实践过程中遇到的问题
 

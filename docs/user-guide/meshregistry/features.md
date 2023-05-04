@@ -11,7 +11,6 @@
 * k8s
 
 
-
 ## 支持的协议
 
 * `MCP-over-xDS`
@@ -35,5 +34,3 @@
 ### dubbo `Sidecar`生成
 
 可选的可以开启dubbo `Sidecar`生成特性，开启后会根据zk中的dubbo consumers信息来分析出dubbo application的interface依赖关系，然后生成标准的istio `Sidecar`资源，可以极大的减少下发给数据面的配置量
-
-
