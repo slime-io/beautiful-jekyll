@@ -94,30 +94,37 @@
 
 详见RELEASE NOTE [V0.7.1](https://github.com/slime-io/slime/releases/tag/v0.7.1)
 
+## Slime v0.7.2（已发布）
 
-## Slime v0.8.0（规划中）
+- 优化处理了很多实践过程中遇到的问题
 
-**流量管理**
+详见RELEASE NOTE [V0.7.2](https://github.com/slime-io/slime/releases/tag/v0.7.2)
 
-- 【智能降级】发布服务网格降级标准 API
-- 【智能降级】发布智能降级新模块
+
+## Slime v0.8.0（6月底）
 
 **运维管理**
 
-- 【配置懒加载】发布服务网格配置精准推送标准 API
+- 【配置懒加载】支持grpc懒加载
+-  前端控制台支持下发Smartlimiter
 
 **扩展管理**
 
 - 【插件管理】支持服务级别插件下发
 
+## Slime v0.8.1（7月底）
+- bugfix
 
-## Slime v0.9.0（规划中）
+## Slime v0.8.2（8月底）
+- bugfix
+
+## Slime v0.9.0（9月底）
 
 **运维管理**
+
 - 前端控制台
 
 
 **工程**
-
 - 支持 Istio Ambient 路线
 - 适配 SMI
