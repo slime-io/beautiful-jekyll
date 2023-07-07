@@ -142,7 +142,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-bundle-example-all
-    tag: v0.7.1
+    tag: v0.8.0
   module:
     - name: bundle
       enable: true
@@ -192,7 +192,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-lazyload
-    tag: v0.7.1
+    tag: v0.8.0
   namespace: mesh-operator
   istioNamespace: istio-system
   module:
@@ -205,12 +205,11 @@ spec:
         defaultFence: true
         wormholePort: # replace to your application service ports, and extend the list in case of multi ports
           - "9080"
+        globalSidecarMode: cluster # the mode of global-sidecar
+        metricSourceType: accesslog # indicate the metric source          
       global:
         log:
           logLevel: info
-        misc:
-          globalSidecarMode: cluster # the mode of global-sidecar
-          metricSourceType: accesslog # indicate the metric source
         slimeNamespace: mesh-operator
   resources:
     requests:
@@ -236,7 +235,7 @@ spec:
           memory: 400Mi
       image:
         repository: docker.io/slimeio/slime-global-sidecar
-        tag: v0.7.1
+        tag: v0.8.0
       probePort: 20000
 ```
 
@@ -265,7 +264,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-limiter
-    tag: v0.7.1
+    tag: v0.8.0
   module:
     - name: limiter
       kind: limiter
@@ -297,7 +296,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-plugin
-    tag: v0.7.1
+    tag: v0.8.0
   module:
     - name: plugin
       kind: plugin
@@ -326,7 +325,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-meshregistry
-    tag: v0.7.1
+    tag: v0.8.0
   module:
     - name: meshregistry
       kind: meshregistry
@@ -337,7 +336,7 @@ spec:
             Enabled: true
             RefreshPeriod: 30s
             Address:
-              - "http://nacos.test.com"
+              - "http://nacos.test.com:8848"
             Mode: polling
           # EurekaSource:
           #   Enabled: true
@@ -367,7 +366,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-bundle-all
-    tag: v0.7.1
+    tag: v0.8.0
   module:
     - name: bundle
       enable: true
@@ -394,10 +393,9 @@ spec:
         defaultFence: true
         wormholePort: # replace to your application service ports, and extend the list in case of multi ports
           - "9080"
+        globalSidecarMode: cluster # the mode of global-sidecar
+        metricSourceType: accesslog # indicate the metric source        
       global:
-        misc:
-          globalSidecarMode: cluster # the mode of global-sidecar
-          metricSourceType: accesslog # indicate the metric source
         slimeNamespace: mesh-operator
     - name: limiter
       kind: limiter
@@ -440,7 +438,7 @@ spec:
           memory: 400Mi
       image:
         repository: docker.io/slimeio/slime-global-sidecar
-        tag: v0.7.1
+        tag: v0.8.0
       probePort: 20000 # health probe port
       port: 80 # global-sidecar default svc port
       legacyFilterName: true
@@ -450,21 +448,21 @@ spec:
 
 关于上面涉及到的 Config.global 内容如下：
 
-| Key                            | Default Value                                                                                                                              | Usages                                                                                                                                                                                                                                                                                                                         | Remark |
-|--------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
-| service                        | app                                                                                                                                        | servicefence匹配服务的label key，用来生成懒加载中sidecar的默认配置                                                                                                                                                                                                                                                                                |        |
-| istioNamespace                 | istio-system                                                                                                                               | 部署istio组件的namespace，用来生成懒加载中sidecar的默认配置，应等于实际部署istio组件的namespace                                                                                                                                                                                                                                                              |        |
-| slimeNamespace                 | mesh-operator                                                                                                                              | 部署slime模块的namespace，用来生成懒加载中sidecar的默认配置，应等于实际创建slimeboot cr资源的namespace                                                                                                                                                                                                                                                       |        |
-| log.logLevel                   | ""                                                                                                                                         | slime自身日志级别                                                                                                                                                                                                                                                                                                                    |        |
-| log.klogLevel                  | 0                                                                                                                                          | klog日志级别                                                                                                                                                                                                                                                                                                                       |        |
-| log.logRotate                  | false                                                                                                                                      | 是否启用日志轮转，即日志输出本地文件                                                                                                                                                                                                                                                                                                             |        |
-| log.logRotateConfig.filePath   | "/tmp/log/slime.log"                                                                                                                       | 本地日志文件路径                                                                                                                                                                                                                                                                                                                       |        |
-| log.logRotateConfig.maxSizeMB  | 100                                                                                                                                        | 本地日志文件大小上限，单位MB                                                                                                                                                                                                                                                                                                                |        |
-| log.logRotateConfig.maxBackups | 10                                                                                                                                         | 本地日志文件个数上限                                                                                                                                                                                                                                                                                                                     |        |
-| log.logRotateConfig.maxAgeDay  | 10                                                                                                                                         | 本地日志文件保留时间，单位天                                                                                                                                                                                                                                                                                                                 |        |
-| log.logRotateConfig.compress   | false                                                                                                                                      | 本地日志文件轮转后是否压缩                                                                                                                                                                                                                                                                                                                  |        |
-| misc                           | {"metrics-addr": ":8080", "aux-addr": ":8081","globalSidecarMode": "namespace","metricSourceType": "prometheus","logSourcePort": ":8082"}, | 可扩展的配置集合，目前支持一下参数参数：1."metrics-addr"定义slime module manager监控指标暴露地址；2."aux-addr"定义辅助服务器暴露地址；3."globalSidecarMode"定义global-sidecar的使用模式，默认是"namespace"，可选的还有"cluster", "no"；4."metricSourceType"定义监控指标来源，默认是"prometheus"，可选"accesslog"；5."logSourcePort"定义使用accesslog做指标源时，接收accesslog的端口，默认是8082，如果要修改，注意也要修改helm模板中的logSourcePort |
-| seLabelSelectorKeys            | app                                                                                                                                        | 默认应用标识，se 涉及                                                                                                                                                                                                                                                                                                                   |        |
-| xdsSourceEnableIncPush         | true                                                                                                                                       | 是否进行xds增量推送                                                                                                                                                                                                                                                                                                                    |
-| pathRedirect                   | ""                                                                                                                                         | path从定向映射表                                                                                                                                                                                                                                                                                                                     |
+| Key                            | Default Value                                                                                                                              | Usages                                                                                                                                                                                                                                                                                                                        | Remark |
+|--------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| service                        | app                                                                                                                                        | servicefence匹配服务的label key，用来生成懒加载中sidecar的默认配置                                                                                                                                                                                                                                                                               |        |
+| istioNamespace                 | istio-system                                                                                                                               | 部署istio组件的namespace，用来生成懒加载中sidecar的默认配置，应等于实际部署istio组件的namespace                                                                                                                                                                                                                                                             |        |
+| slimeNamespace                 | mesh-operator                                                                                                                              | 部署slime模块的namespace，用来生成懒加载中sidecar的默认配置，应等于实际创建slimeboot cr资源的namespace                                                                                                                                                                                                                                                      |        |
+| log.logLevel                   | ""                                                                                                                                         | slime自身日志级别                                                                                                                                                                                                                                                                                                                   |        |
+| log.klogLevel                  | 0                                                                                                                                          | klog日志级别                                                                                                                                                                                                                                                                                                                      |        |
+| log.logRotate                  | false                                                                                                                                      | 是否启用日志轮转，即日志输出本地文件                                                                                                                                                                                                                                                                                                            |        |
+| log.logRotateConfig.filePath   | "/tmp/log/slime.log"                                                                                                                       | 本地日志文件路径                                                                                                                                                                                                                                                                                                                      |        |
+| log.logRotateConfig.maxSizeMB  | 100                                                                                                                                        | 本地日志文件大小上限，单位MB                                                                                                                                                                                                                                                                                                               |        |
+| log.logRotateConfig.maxBackups | 10                                                                                                                                         | 本地日志文件个数上限                                                                                                                                                                                                                                                                                                                    |        |
+| log.logRotateConfig.maxAgeDay  | 10                                                                                                                                         | 本地日志文件保留时间，单位天                                                                                                                                                                                                                                                                                                                |        |
+| log.logRotateConfig.compress   | false                                                                                                                                      | 本地日志文件轮转后是否压缩                                                                                                                                                                                                                                                                                                                 |        |
+| misc                           | {"metrics-addr": ":8080", "aux-addr": ":8081"}, | 可扩展的配置集合，目前支持一下参数参数：1."metrics-addr"定义slime module manager监控指标暴露地址；2."aux-addr"定义辅助服务器暴露地址|
+| seLabelSelectorKeys            | app                                                                                                                                        | 默认应用标识，se 涉及                                                                                                                                                                                                                                                                                                                  |        |
+| xdsSourceEnableIncPush         | true                                                                                                                                       | 是否进行xds增量推送                                                                                                                                                                                                                                                                                                                   |
+| pathRedirect                   | ""                                                                                                                                         | path从定向映射表                                                                                                                                                                                                                                                                                                                    |
 

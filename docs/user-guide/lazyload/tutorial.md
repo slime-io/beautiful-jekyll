@@ -49,7 +49,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-lazyload
-    tag: v0.7.1
+    tag: v0.8.0
   namespace: mesh-operator
   istioNamespace: istio-system
   module:
@@ -62,12 +62,11 @@ spec:
         defaultFence: true   
         wormholePort: # replace to your application service ports, and extend the list in case of multi ports
           - "9080"
+        globalSidecarMode: cluster # the mode of global-sidecar
+        metricSourceType: accesslog # indicate the metric source          
       global:
         log:
           logLevel: info
-        misc:
-          globalSidecarMode: cluster # the mode of global-sidecar
-          metricSourceType: accesslog # indicate the metric source
         slimeNamespace: mesh-operator
   resources:
     requests:
@@ -93,7 +92,7 @@ spec:
           memory: 400Mi
       image:
         repository: docker.io/slimeio/slime-global-sidecar
-        tag: v0.7.1
+        tag: v0.8.0
       probePort: 20000
 ' > /tmp/lazyload-slimeboot.yaml
 

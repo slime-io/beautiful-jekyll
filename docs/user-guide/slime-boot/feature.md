@@ -25,7 +25,5 @@ spec:
         disableAdaptive: true
         disableInsertGlobalRateLimit: true
         misc:
-          enable-leader-election: "on"  #多副本
+          enableLeaderElection: "on"  #多副本
 ```
-
-## TODO
