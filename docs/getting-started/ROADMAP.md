@@ -101,18 +101,20 @@
 详见RELEASE NOTE [V0.7.2](https://github.com/slime-io/slime/releases/tag/v0.7.2)
 
 
-## Slime v0.8.0（6月底）
+## Slime v0.8.0（已发布）
 
 **运维管理**
 
 - 【配置懒加载】支持grpc懒加载
--  前端控制台支持下发Smartlimiter
+- 【配置懒加载】特征流量分派
 
+详见RELEASE NOTE [V0.8.0](https://github.com/slime-io/slime/releases/tag/v0.8.0)
+
+
+## Slime v0.8.1（7月底）
 **扩展管理**
 
 - 【插件管理】支持服务级别插件下发
-
-## Slime v0.8.1（7月底）
 - bugfix
 
 ## Slime v0.8.2（8月底）

@@ -8,41 +8,36 @@ nav:
       - 路线图: getting-started/ROADMAP.md
 
     - 用户指南:
-    
       - Slime-Boot:
         - 教程: user-guide/slime-boot/tutorial.md
         - 特性: user-guide/slime-boot/feature.md
-
       - Lazyload: 
         - 概述: user-guide/lazyload/overview.md
         - 架构: user-guide/lazyload/arch.md
-        - 特性: user-guide/lazyload/features.md
+        - 特性:
+          - grpc懒加载: user-guide/lazyload/feature/grpc懒加载.md
+          - 特征流量分派: user-guide/lazyload/feature/特征流量分派.md
         - 教程: user-guide/lazyload/tutorial.md
-      
       - Limiter: 
         - 概述: user-guide/limiter/overview.md
         - 架构: user-guide/limiter/arch.md
         - 特性: user-guide/limiter/features.md
         - 教程: user-guide/limiter/tutorial.md
-
       - Plugin: 
         - 概述: user-guide/plugin/overview.md
         - 架构: user-guide/plugin/arch.md
         - 特性: user-guide/plugin/features.md
         - 教程: user-guide/plugin/tutorial.md
-
       - Meshregistry:
           - 概述: user-guide/meshregistry/overview.md
           - 架构: user-guide/meshregistry/arch.md
           - 特性: user-guide/meshregistry/features.md
           - 教程: user-guide/meshregistry/tutorial.md
-
       - I9s: 
         - 概述: user-guide/i9s/overview.md
         - 架构: user-guide/i9s/arch.md
         - 特性: user-guide/i9s/features.md
         - 教程: user-guide/i9s/tutorial.md
-
       - Build:
         - 教程: user-guide/slime-boot/tutorial.md
 
@@ -54,6 +49,7 @@ nav:
       - 把Istio的复杂性塞入智能的黑盒: blog/把Istio的复杂性塞入智能的黑盒.md
 
     - 版本发布:
+        - v0.8.0: release/v0.8.0.md
         - v0.7.2: release/v0.7.2.md
         - v0.7.1: release/v0.7.1.md
         - v0.7.0: release/v0.7.0.md
