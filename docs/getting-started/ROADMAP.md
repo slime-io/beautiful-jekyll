@@ -111,22 +111,12 @@
 详见RELEASE NOTE [V0.8.0](https://github.com/slime-io/slime/releases/tag/v0.8.0)
 
 
-## Slime v0.8.1（7月底）
+## Slime v0.8.1（已发布）
+
+详见RELEASE NOTE [V0.8.1](https://github.com/slime-io/slime/releases/tag/v0.8.1)
+
+
+## Slime v0.9.0（10月初）
 **扩展管理**
 
 - 【插件管理】支持服务级别插件下发
-- bugfix
-
-## Slime v0.8.2（8月底）
-- bugfix
-
-## Slime v0.9.0（9月底）
-
-**运维管理**
-
-- 前端控制台
-
-
-**工程**
-- 支持 Istio Ambient 路线
-- 适配 SMI
