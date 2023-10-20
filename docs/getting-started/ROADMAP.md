@@ -116,7 +116,12 @@
 详见RELEASE NOTE [V0.8.1](https://github.com/slime-io/slime/releases/tag/v0.8.1)
 
 
-## Slime v0.9.0（10月初）
+## Slime v0.8.2（发布中）
+
+详见RELEASE NOTE [V0.8.2](https://github.com/slime-io/slime/releases/tag/v0.8.2)
+
+
+## Slime v0.9.0（11月）
 **扩展管理**
 
 - 【插件管理】支持服务级别插件下发
