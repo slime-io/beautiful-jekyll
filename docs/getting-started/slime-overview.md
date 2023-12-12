@@ -24,20 +24,20 @@ Slime 定位是服务网格智能管理器，构建在服务网格之上。Slime
 Slime 核心能力包括智能流量管理、智能运维管理、智能扩展管理：
 
 - **智能流量管理**：通过业务流量中的特征内容，升级服务网格流量治理能力，为业务提供更精细化和及时的治理功能  ——
-    - [自适应限流](https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/limiter)：实现了本地限流，同时可以结合监控信息自动调整限流策略，填补了传统服务网格限流功能的短板
+    - [自适应限流](https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/limiter/README.md)：实现了本地限流，同时可以结合监控信息自动调整限流策略，填补了传统服务网格限流功能的短板
     - 智能熔断降级
     - 流量染色
 
 - **智能运维管理**：结合服务网格架构下的组件与业务特征，提供更精准、可视化的运维能力和性能稳定性增强 ——
-    - [配置懒加载](https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/lazyload)：无须配置SidecarScope，自动按需加载配置和服务发现信息 ，解决了全量推送的问题。服务调用关系的来源支持Prometheus或者Accesslog
-    - [网格（服务）仓库](https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/meshregistry)：帮助istio快速集成各种服务注册中心
+    - [配置懒加载](https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/lazyload/README.md)：无须配置SidecarScope，自动按需加载配置和服务发现信息 ，解决了全量推送的问题。服务调用关系的来源支持Prometheus或者Accesslog
+    - [网格（服务）仓库](https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/meshregistry/README_CH.md)：帮助istio快速集成各种服务注册中心
     - 文件分发管理（filemanager，后续提供）
-    - 命令行交互 [i9s](https://github.com/slime-io/i9s)
+    - 命令行交互 [i9s](https://github.com/slime-io/i9s/blob/i9s/README.md)
     - 巡检（patrol）
     - 排障工具（tracetio）
 
 - **智能插件管理**：针对服务网格缺少高效的插件管理工具的问题，提供批量插件管理能力，简化服务网格数据面插件管理的难度
-    - [Http插件管理](https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/plugin)：使用新的的CRD pluginmanager/envoyplugin包装了可读性及可维护性差的envoyfilter，使得插件扩展更为便捷。
+    - [Http插件管理](https://github.com/slime-io/slime/tree/master/staging/src/slime.io/slime/modules/plugin/README.md)：使用新的的CRD pluginmanager/envoyplugin包装了可读性及可维护性差的envoyfilter，使得插件扩展更为便捷。
 
 后续我们会开源更多的功能模块。
 

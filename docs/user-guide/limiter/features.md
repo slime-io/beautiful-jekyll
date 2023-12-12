@@ -1,17 +1,4 @@
-1. 方便使用，只需提交`SmartLimiter`资源即可达到服务限流的目的。
-2. 自适应限流，根据`pod`的资源使用量动态的触发限流规则。
-3. 覆盖场景多，网格入口流量限流，网关出口流量限流
-4. 支持功能多，支持全局共享限流，全局均分限流，单机限流。
-
-------
-
-## 思路
-slime/limiter 组件监听smartlimiter资源，自动生成包含限流规则的envoyfilter。
-
-- 对于网格场景，envoyfilter会下发给作为sidecar的envoy,在envoy的入口进行限流判断。
-- 对于网关场景，envoyfilter被下发给作为router的envoy，在envoy的出口进行限流判断。
-
-## 功能
+## 特性
 
 目前slime/limiter模块支持以下几个类型的限流：
 

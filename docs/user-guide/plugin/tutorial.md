@@ -1,4 +1,6 @@
-## 安装和使用
+## 安装
+
+前提：安装[Slimeboot](../slime-boot/tutorial.md)以及对应CRD
 
 使用如下配置安装HTTP插件管理模块：
 
@@ -19,9 +21,13 @@ spec:
     tag: {{your_plugin_tag}}
 ```
 
-[完整样例](../slime-boot/tutorial.md)
+[完整样例](../slime-boot/samples.md)
 
-pluginmanager 和 envoyplugin 是平级关系。pluginmanager 作用于 LDS 对象，用于自动生成针对 HTTP 链接管理器（HCM）的路由过滤器（envoy.filters.http.router）的 envoyfilter。envoyplugin 作用于 RDS 对象，用于自动生成针对虚拟主机（config.route.v3.VirtualHost）和路由（config.route.v3.Route）的 envoyfilter。
+pluginmanager 和 envoyplugin 是平级关系。
+
+pluginmanager 作用于 LDS 对象，用于自动生成针对 HTTP 链接管理器（HCM）的路由过滤器（envoy.filters.http.router）的 envoyfilter
+
+envoyplugin 作用于 RDS 对象，用于自动生成针对虚拟主机（config.route.v3.VirtualHost）和路由（config.route.v3.Route）的 envoyfilter。
 
 ## PluginManager
 

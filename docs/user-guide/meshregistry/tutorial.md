@@ -1,57 +1,6 @@
-作为slime module，使用上的流程大体接近：
+## 安装使用
 
-1. 启用该模块、被slime纳管（slime-boot方式 or bundle方式）
-
-2. 准备好module config对模块行为进行必要的配置
-
-### bundle部署方式
-
-1. 在bundle中将本模块加入，打包、出镜像
-
-2. 本模块支持env方式设置少量行为，如有必要可以添加在bundle的部署材料（deployment）中 （可选）
-
-3. 在bundle的配置configmap中加入本模块部分，类似如下：
-
-   ```yaml
-   apiVersion: v1
-   data:
-     cfg: |
-       bundle:
-         modules:
-         - name: meshregistry
-           kind: meshregistry
-       enable: true
-     cfg_meshregistry: |
-       name: meshregistry
-       kind: meshregistry
-       enable: true
-       mode: BundleItem
-       general:
-         LEGACY:
-           MeshConfigFile: ""
-           RevCrds: ""
-           Mcp:
-             EnableIncPush: false
-           K8SSource:
-             Enabled: false
-           EurekaSource:
-             Enabled: true
-             Address:
-             - "http://eureka.myeureka.com/eureka"
-             RefreshPeriod: 15s
-             SvcPort: 80
-           ZookeeperSource:
-             Enabled: true
-             RefreshPeriod: 30s
-             WaitTime: 10s
-             # EnableDubboSidecar: false
-             Address:
-             - zookeeper.myzk.cluster.local:2181
-   ```
-
-   > 其他配置内容见bundle部署模式介绍
-   >
-   > 配置内容详见 `pkg/bootstrap/args.go`
+前提：安装[Slimeboot](../slime-boot/tutorial.md)以及对应CRD
 
 ### 单独部署样例
 
@@ -168,3 +117,53 @@
   }
 ]
 ```
+
+
+### bundle部署方式
+
+1. 在bundle中将本模块加入，打包、出镜像
+
+2. 本模块支持env方式设置少量行为，如有必要可以添加在bundle的部署材料（deployment）中 （可选）
+
+3. 在bundle的配置configmap中加入本模块部分，类似如下：
+
+   ```yaml
+   apiVersion: v1
+   data:
+     cfg: |
+       bundle:
+         modules:
+         - name: meshregistry
+           kind: meshregistry
+       enable: true
+     cfg_meshregistry: |
+       name: meshregistry
+       kind: meshregistry
+       enable: true
+       mode: BundleItem
+       general:
+         LEGACY:
+           MeshConfigFile: ""
+           RevCrds: ""
+           Mcp:
+             EnableIncPush: false
+           K8SSource:
+             Enabled: false
+           EurekaSource:
+             Enabled: true
+             Address:
+             - "http://eureka.myeureka.com/eureka"
+             RefreshPeriod: 15s
+             SvcPort: 80
+           ZookeeperSource:
+             Enabled: true
+             RefreshPeriod: 30s
+             WaitTime: 10s
+             # EnableDubboSidecar: false
+             Address:
+             - zookeeper.myzk.cluster.local:2181
+   ```
+
+   > 其他配置内容见bundle部署模式介绍
+   >
+   > 配置内容详见 `pkg/bootstrap/args.go`
