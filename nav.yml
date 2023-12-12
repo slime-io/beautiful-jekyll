@@ -9,37 +9,39 @@ nav:
 
     - 用户指南:
       - Slime-Boot:
-        - 教程: user-guide/slime-boot/tutorial.md
-        - 特性: user-guide/slime-boot/feature.md
+        - 安装教程: user-guide/slime-boot/tutorial.md
+        - 使用样例: user-guide/slime-boot/samples.md
+
       - Lazyload: 
         - 概述: user-guide/lazyload/overview.md
-        - 架构: user-guide/lazyload/arch.md
         - 特性:
+          - http懒加载: user-guide/lazyload/feature/http懒加载.md
+          - autoport特性: user-guide/lazyload/feature/autoport特性.md
           - grpc懒加载: user-guide/lazyload/feature/grpc懒加载.md
           - 特征流量分派: user-guide/lazyload/feature/特征流量分派.md
-        - 教程: user-guide/lazyload/tutorial.md
+          - 特性说明: user-guide/lazyload/feature/特性说明.md
+        - 使用教程: user-guide/lazyload/tutorial.md
+
       - Limiter: 
         - 概述: user-guide/limiter/overview.md
-        - 架构: user-guide/limiter/arch.md
         - 特性: user-guide/limiter/features.md
-        - 教程: user-guide/limiter/tutorial.md
+        - 使用教程: user-guide/limiter/tutorial.md
+
       - Plugin: 
         - 概述: user-guide/plugin/overview.md
-        - 架构: user-guide/plugin/arch.md
-        - 特性: user-guide/plugin/features.md
-        - 教程: user-guide/plugin/tutorial.md
+        - 使用教程: user-guide/plugin/tutorial.md
+
       - Meshregistry:
-          - 概述: user-guide/meshregistry/overview.md
-          - 架构: user-guide/meshregistry/arch.md
-          - 特性: user-guide/meshregistry/features.md
-          - 教程: user-guide/meshregistry/tutorial.md
+        - 概述: user-guide/meshregistry/overview.md
+        - 教程: user-guide/meshregistry/tutorial.md
+
       - I9s: 
         - 概述: user-guide/i9s/overview.md
-        - 架构: user-guide/i9s/arch.md
-        - 特性: user-guide/i9s/features.md
         - 教程: user-guide/i9s/tutorial.md
-      - Build:
-        - 教程: user-guide/slime-boot/tutorial.md
+
+      - 其他:
+        - 镜像构建: user-guide/other/image-usage.md
+        - developers guide: user-guide/other/developers-guide.md
 
     - Blog:
       - Slime化解服务网格多注册中心兼容之痛: blog/Slime化解服务网格多注册中心兼容之痛.md

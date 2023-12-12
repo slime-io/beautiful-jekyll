@@ -2,15 +2,15 @@
 
 ### 安装Limiter模块
 
-前提：在部署limiter模块前需要安装`CRD`和`deployment/slime-boot`, 按照 [slime-boot 安装](https://github.com/slime-io/slime/blob/master/doc/zh/slime-boot.md#准备) 指引, 安装`SlimeBoot CRD`和`deployment/slime-boot`
+前提：安装[Slimeboot](../slime-boot/tutorial.md)以及对应CRD
 
-在`CRD`和`deployment/slime-boot`安装成功后，用户可手动应用以下清单，安装支持单机和均分限流功能的 [limiter](https://github.com/slime-io/slime/blob/master/staging/src/slime.io/slime/modules/limiter/install/limiter.yaml) 模块，
+之后用户可手动应用以下清单，安装支持单机和均分限流功能的 [limiter](https://github.com/slime-io/slime/blob/master/staging/src/slime.io/slime/modules/limiter/install/limiter.yaml) 模块，
 
 **如需支持全局共享限流功能**，请先安装 [安装 Rls & Redis](#rls-redis), 以及重新下发支持全局限流、单机限流和均分限流功能的 [limiter-global](https://github.com/slime-io/slime/blob/master/staging/src/slime.io/slime/modules/limiter/install/limiter-global.yaml) 的模块，
 
 如需要支持自适应限流，请先安装 [prometheus](#prometheus)
 
-## 使用场景
+## 最佳实践
                           
 smarlimiter 定义见 [proto](https://github.com/slime-io/slime/blob/master/staging/src/slime.io/slime/modules/limiter/api/v1alpha2/smart_limiter.proto)
 
