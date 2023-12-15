@@ -170,7 +170,7 @@ spec:
   image:
     pullPolicy: Always
     repository: docker.io/slimeio/slime-bundle-example-all
-    tag: v0.8.2
+    tag: v0.9.0
   module:
     - name: bundle
       enable: true
@@ -193,4 +193,4 @@ spec:
 ```
 
 
-使用者可参考[子模块安装](./%E5%AD%90%E6%A8%A1%E5%9D%97%E5%AE%89%E8%A3%85.md）安装`lazyload`，`limiter`和`plugin`模块
+使用者可参考 [子模块安装](./samples.md) 部署`lazyload`，`limiter`和`plugin`模块

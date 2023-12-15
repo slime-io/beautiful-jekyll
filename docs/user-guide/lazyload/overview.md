@@ -29,15 +29,16 @@
 
 前提：部署Lazyload模块
 
+```
 1. Service A发起访问Service B，由于Service A没有Service B的配置信息，请求发到global-sidecar的sidecar
 
-2. global-sidecar处理
+2. global-sidecar处理请求
 
-   2.1 入流量拦截，如果是accesslog模式，sidecar会生成包含服务调用关系的accesslog
+   - 2.1 入流量拦截，如果是accesslog模式，sidecar会生成包含服务调用关系的accesslog
 
-   2.2 global-sidecar应用根据请求头等信息，转换访问目标为Service B
+   - 2.2 global-sidecar应用根据请求头等信息，转换访问目标为Service B
 
-   2.3 出流量拦截，sidecar拥有所有服务配置信息，找到Service B目标信息，发出请求
+   - 2.3 出流量拦截，sidecar拥有所有服务配置信息，找到Service B目标信息，发出请求
 
 3. 请求正确到达Service B
 
@@ -52,6 +53,7 @@
 8. Istiod下发Sidecar A限定范围内的配置给Service A的sidecar，新增了B的xDS内容
 
 9. 后续调用，Service A直接访问Service B成功
+```
 
 ------
 

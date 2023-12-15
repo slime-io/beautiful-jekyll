@@ -75,4 +75,3 @@
 所以对于这种拥有h2或者grpc端口的服务，需要用户关闭懒加载，即在服务svc上加上如下的注解：`slime.io/serviceFenced: "false"`
 
 **我们在grpc懒加载方案中，尝试用envoy代替global-sidecar, 这样就可以直接转发grpc和h2的流量。该方案目前处于实验阶段，还未正式发布，敬请期待。**
-整页翻译

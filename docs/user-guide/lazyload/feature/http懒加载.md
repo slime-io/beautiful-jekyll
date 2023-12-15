@@ -245,5 +245,3 @@ global-sidecar产生的accesslog会被上报至lazyload, 对于每一条accesslo
 * 对于短域名问题，globla-sidecar是如何解决的，请参考短域名特性文档
 
 * 对于htt2/grpc流量的懒加载，该如何实现，请参考grpc懒加载特性文档
-
-整页翻译
