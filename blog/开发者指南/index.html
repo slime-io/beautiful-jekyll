@@ -1,0 +1,1832 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Slime Documentation">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/todo.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-7.2.5">
+    
+    
+      
+        <title>Slime开发者指南 - Slime</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.be71726b.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=:300,400,400i,700%7CRobot+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"";--md-code-font-family:"Robot Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Slime" class="md-header__button md-logo" aria-label="Slime" data-md-component="logo">
+      
+  <img src="../../assets/slime-logo-home.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Slime
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Slime开发者指南
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/slime-io/slime" title="前往 GitHub 仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    slime
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/slime-overview/" class="md-tabs__link">
+        快速上手
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../user-guide/slime-boot/tutorial/" class="md-tabs__link">
+        用户指南
+      </a>
+    </li>
+  
+
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../Slime%E5%8C%96%E8%A7%A3%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC%E5%A4%9A%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E5%85%BC%E5%AE%B9%E4%B9%8B%E7%97%9B/" class="md-tabs__link md-tabs__link--active">
+        Blog
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release/v0.9.0/" class="md-tabs__link">
+        版本发布
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Slime" class="md-nav__button md-logo" aria-label="Slime" data-md-component="logo">
+      
+  <img src="../../assets/slime-logo-home.png" alt="logo">
+
+    </a>
+    Slime
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/slime-io/slime" title="前往 GitHub 仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    slime
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        快速上手
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="快速上手" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          快速上手
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/slime-overview/" class="md-nav__link">
+        简介
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/slime-arch/" class="md-nav__link">
+        架构
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/slime-community/" class="md-nav__link">
+        交流
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/ROADMAP/" class="md-nav__link">
+        路线图
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        用户指南
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="用户指南" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          用户指南
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      <label class="md-nav__link" for="__nav_3_1">
+        Slime-Boot
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Slime-Boot" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Slime-Boot
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/slime-boot/tutorial/" class="md-nav__link">
+        安装教程
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/slime-boot/samples/" class="md-nav__link">
+        使用样例
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      <label class="md-nav__link" for="__nav_3_2">
+        Lazyload
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Lazyload" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Lazyload
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/overview/" class="md-nav__link">
+        概述
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_2" type="checkbox" id="__nav_3_2_2" >
+      
+      <label class="md-nav__link" for="__nav_3_2_2">
+        特性
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="特性" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_2">
+          <span class="md-nav__icon md-icon"></span>
+          特性
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/feature/http%E6%87%92%E5%8A%A0%E8%BD%BD/" class="md-nav__link">
+        http懒加载
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/feature/autoport%E7%89%B9%E6%80%A7/" class="md-nav__link">
+        autoport特性
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/feature/grpc%E6%87%92%E5%8A%A0%E8%BD%BD/" class="md-nav__link">
+        grpc懒加载
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/feature/%E7%89%B9%E5%BE%81%E6%B5%81%E9%87%8F%E5%88%86%E6%B4%BE/" class="md-nav__link">
+        特征流量分派
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/feature/%E7%89%B9%E6%80%A7%E8%AF%B4%E6%98%8E/" class="md-nav__link">
+        特性说明
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/tutorial/" class="md-nav__link">
+        使用教程
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_3" type="checkbox" id="__nav_3_3" >
+      
+      <label class="md-nav__link" for="__nav_3_3">
+        Limiter
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Limiter" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_3">
+          <span class="md-nav__icon md-icon"></span>
+          Limiter
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/limiter/overview/" class="md-nav__link">
+        概述
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/limiter/features/" class="md-nav__link">
+        特性
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/limiter/tutorial/" class="md-nav__link">
+        使用教程
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_4" type="checkbox" id="__nav_3_4" >
+      
+      <label class="md-nav__link" for="__nav_3_4">
+        Plugin
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Plugin" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          Plugin
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/plugin/overview/" class="md-nav__link">
+        概述
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/plugin/tutorial/" class="md-nav__link">
+        使用教程
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_5" type="checkbox" id="__nav_3_5" >
+      
+      <label class="md-nav__link" for="__nav_3_5">
+        Meshregistry
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Meshregistry" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_5">
+          <span class="md-nav__icon md-icon"></span>
+          Meshregistry
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/meshregistry/overview/" class="md-nav__link">
+        概述
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/meshregistry/tutorial/" class="md-nav__link">
+        教程
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_6" type="checkbox" id="__nav_3_6" >
+      
+      <label class="md-nav__link" for="__nav_3_6">
+        I9s
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="I9s" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_6">
+          <span class="md-nav__icon md-icon"></span>
+          I9s
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/i9s/overview/" class="md-nav__link">
+        概述
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/i9s/tutorial/" class="md-nav__link">
+        教程
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_7" type="checkbox" id="__nav_3_7" >
+      
+      <label class="md-nav__link" for="__nav_3_7">
+        其他
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="其他" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_7">
+          <span class="md-nav__icon md-icon"></span>
+          其他
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/other/image-usage/" class="md-nav__link">
+        镜像构建
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/other/developers-guide/" class="md-nav__link">
+        developers guide
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      <label class="md-nav__link" for="__nav_4">
+        Blog
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Blog" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Blog
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Slime%E5%8C%96%E8%A7%A3%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC%E5%A4%9A%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E5%85%BC%E5%AE%B9%E4%B9%8B%E7%97%9B/" class="md-nav__link">
+        Slime化解服务网格多注册中心兼容之痛
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Slime开发者指南
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Slime开发者指南
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    1.背景
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2.创建模块
+  </a>
+  
+    <nav class="md-nav" aria-label="2.创建模块">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    2.1 创建子模块
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-api" class="md-nav__link">
+    2.2 修改api
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-crd" class="md-nav__link">
+    2.3 生成CRD
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    3.功能开发
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    4.编译构建
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    5.部署
+  </a>
+  
+    <nav class="md-nav" aria-label="5.部署">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-slimeboot" class="md-nav__link">
+    5.1 SlimeBoot安装
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-foo-crd" class="md-nav__link">
+    5.2 创建Foo CRD
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    5.3 部署应用
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-pods" class="md-nav__link">
+    5.4 pods 验证
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54" class="md-nav__link">
+    5.4 功能验证
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E4%B8%80%E4%B8%AA%E9%AB%98%E6%95%88%E7%9A%84Istio%E5%8F%AF%E8%A7%86%E5%8C%96%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7/" class="md-nav__link">
+        一个高效的Istio可视化命令行工具
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Slime%E8%AE%A9Istio%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC%E5%8F%98%E5%BE%97%E6%9B%B4%E5%8A%A0%E9%AB%98%E6%95%88%E4%B8%8E%E6%99%BA%E8%83%BD/" class="md-nav__link">
+        Slime让Istio服务网格变得更加高效与智能
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E6%8A%8AIstio%E7%9A%84%E5%A4%8D%E6%9D%82%E6%80%A7%E5%A1%9E%E5%85%A5%E6%99%BA%E8%83%BD%E7%9A%84%E9%BB%91%E7%9B%92/" class="md-nav__link">
+        把Istio的复杂性塞入智能的黑盒
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        版本发布
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="版本发布" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          版本发布
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.9.0/" class="md-nav__link">
+        v0.9.0
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.8.2/" class="md-nav__link">
+        v0.8.2
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.8.1/" class="md-nav__link">
+        v0.8.1
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.8.0/" class="md-nav__link">
+        v0.8.0
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.7.2/" class="md-nav__link">
+        v0.7.2
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.7.1/" class="md-nav__link">
+        v0.7.1
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.7.0/" class="md-nav__link">
+        v0.7.0
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.6.0/" class="md-nav__link">
+        v0.6.0
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.5.0/" class="md-nav__link">
+        v0.5.0
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.4.0/" class="md-nav__link">
+        v0.4.0
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    1.背景
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2.创建模块
+  </a>
+  
+    <nav class="md-nav" aria-label="2.创建模块">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    2.1 创建子模块
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-api" class="md-nav__link">
+    2.2 修改api
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-crd" class="md-nav__link">
+    2.3 生成CRD
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    3.功能开发
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    4.编译构建
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    5.部署
+  </a>
+  
+    <nav class="md-nav" aria-label="5.部署">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-slimeboot" class="md-nav__link">
+    5.1 SlimeBoot安装
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-foo-crd" class="md-nav__link">
+    5.2 创建Foo CRD
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    5.3 部署应用
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-pods" class="md-nav__link">
+    5.4 pods 验证
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54" class="md-nav__link">
+    5.4 功能验证
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/slime-io/slime/edit/master/docs/blog/开发者指南.md" title="编辑此页" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  <h1>Slime开发者指南</h1>
+                
+                <h2 id="1">1.背景<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<p>为了让更多开发者快速融入slime社区，本文将提供一份开发指南，指引开发者在slime项目中创建子模块、功能开发、编译构建、部署，功能验证</p>
+<h2 id="2">2.创建模块<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<p>slime提供了一套脚手架, 通过该脚手架，使用者可以快速创建一个包含了reconcile功能的子模块，这样开发人员就可以将更多的精力放在应用程序的逻辑实现上，加速了开发流程。</p>
+<h3 id="21">2.1 创建子模块<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
+<p>运行以下命令，在slime的<code>staging/src/slime.io/slime/modules</code>目录下创建子模块foo，开发者可自行替换子模块名称</p>
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>bin/gen_module.sh<span class="w"> </span>foo
+</code></pre></div>
+<p>新创建的子模块目录树如下：</p>
+<div class="highlight"><pre><span></span><code>|-- Dockerfile
+|-- PROJECT
+|-- README.md
+|-- api
+|   |-- config
+|   |   |-- foo_module.pb.go
+|   |   |-- foo_module.proto
+|   |   `-- foo_module_deepcopy.gen.go
+|   `-- v1alpha1
+|       |-- foo.pb.go
+|       |-- foo.proto
+|       |-- foo_deepcopy.gen.go
+|       |-- foo_types.go
+|       |-- groupversion_info.go
+|       `-- zz_generated.deepcopy.go
+|-- charts
+|   `-- values.yaml
+|-- controllers
+|   `-- foo_controller.go
+|-- go.mod
+|-- go.sum
+|-- install
+|   `-- samples
+|       `-- slimeboot_foo.yaml
+|-- main.go
+|-- model
+|   `-- model.go
+|-- module
+|   `-- module.go
+`-- publish.sh
+</code></pre></div>
+<p>其中的一些目录含义如下：</p>
+<ul>
+<li>api：<ul>
+<li>config：子模块的启动参数定义，例如，limiter定义的disableGlobalRateLimit字段，在启动时根据该参数关闭全局共享限流功能</li>
+<li>v1alpha1：子模块的CRD定义，默认情况下生成的CRD的gvk是<code>microservice.slime.io/v1alpha1/Foo</code>,其中group和version固定不变，kind等同于用户的子模块名称</li>
+</ul>
+</li>
+<li>controller: 核心的controller逻辑，开发者需要关注的目录</li>
+<li>install: 根据该内容部署你的子模块</li>
+<li>publish: 镜像构建脚本</li>
+</ul>
+<h3 id="22-api">2.2 修改api<a class="headerlink" href="#22-api" title="Permanent link">&para;</a></h3>
+<p>在2.1中，我们创建了一个子模块foo，其api定义位于<code>api/v1alpha1</code>，默认情况下其定义如下</p>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span><span class="w"> </span><span class="nx">Foo</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">TypeMeta</span><span class="w">   </span><span class="s">`json:&quot;,inline&quot;`</span>
+<span class="w">    </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">ObjectMeta</span><span class="w"> </span><span class="s">`json:&quot;metadata,omitempty&quot;`</span>
+
+<span class="w">    </span><span class="nx">Spec</span><span class="w">   </span><span class="nx">FooSpec</span><span class="w">   </span><span class="s">`json:&quot;spec,omitempty&quot;`</span>
+<span class="w">    </span><span class="nx">Status</span><span class="w"> </span><span class="nx">FooStatus</span><span class="w"> </span><span class="s">`json:&quot;status,omitempty&quot;`</span>
+<span class="p">}</span>
+
+<span class="c1">// FooSpec defines the desired state of Foo</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">FooSpec</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Foo is an foo field of Foo.</span>
+<span class="w">    </span><span class="nx">Foo</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="s">`protobuf:&quot;bytes,1,opt,name=foo,proto3&quot; json:&quot;foo,omitempty&quot;`</span>
+<span class="w">    </span><span class="c1">// Foo2 is an foo field of Foo.</span>
+<span class="w">    </span><span class="nx">Foo2</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="s">`protobuf:&quot;bytes,2,opt,name=foo2,proto3&quot; json:&quot;foo2,omitempty&quot;`</span>
+<span class="w">    </span><span class="nx">XXX_NoUnkeyedLiteral</span><span class="w"> </span><span class="kd">struct</span><span class="p">{}</span><span class="w"> </span><span class="s">`json:&quot;-&quot;`</span>
+<span class="w">    </span><span class="nx">XXX_unrecognized</span><span class="w">     </span><span class="p">[]</span><span class="kt">byte</span><span class="w">   </span><span class="s">`json:&quot;-&quot;`</span>
+<span class="w">    </span><span class="nx">XXX_sizecache</span><span class="w">        </span><span class="kt">int32</span><span class="w">    </span><span class="s">`json:&quot;-&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>如果使用者需要修改spec内容, 比如想给foo的spec加上foo3字段,你可以修改<code>api/v1alpha1/foo.proto</code></p>
+<p>样例如下：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">message</span><span class="w"> </span><span class="nc">FooSpec</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Foo is an foo field of Foo.</span>
+<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">foo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Foo2 is an foo field of Foo.</span>
+<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">foo2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Foo3 is an foo field of Foo.</span>
+<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">foo3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>然后执行以下命令(需要docker)，更新api内容, 其中MODULES的值需要替换成你创建时定义的模块名称</p>
+<p><strong>note: 每次修改proto后都需要执行该命令</strong>
+<div class="highlight"><pre><span></span><code><span class="nv">MODULES</span><span class="o">=</span>foo<span class="w"> </span>make<span class="w"> </span>generate-module
+</code></pre></div></p>
+<p>之后观察spec是否更新</p>
+<p><div class="highlight"><pre><span></span><code><span class="kd">type</span><span class="w"> </span><span class="nx">Foo</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">TypeMeta</span><span class="w">   </span><span class="s">`json:&quot;,inline&quot;`</span>
+<span class="w">    </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">ObjectMeta</span><span class="w"> </span><span class="s">`json:&quot;metadata,omitempty&quot;`</span>
+
+<span class="w">    </span><span class="nx">Spec</span><span class="w">   </span><span class="nx">FooSpec</span><span class="w">   </span><span class="s">`json:&quot;spec,omitempty&quot;`</span>
+<span class="w">    </span><span class="nx">Status</span><span class="w"> </span><span class="nx">FooStatus</span><span class="w"> </span><span class="s">`json:&quot;status,omitempty&quot;`</span>
+<span class="p">}</span>
+
+<span class="kd">type</span><span class="w"> </span><span class="nx">FooSpec</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Foo is an foo field of Foo.</span>
+<span class="w">    </span><span class="nx">Foo</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="s">`protobuf:&quot;bytes,1,opt,name=foo,proto3&quot; json:&quot;foo,omitempty&quot;`</span>
+<span class="w">    </span><span class="c1">// Foo2 is an foo field of Foo.</span>
+<span class="w">    </span><span class="nx">Foo2</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="s">`protobuf:&quot;bytes,2,opt,name=foo2,proto3&quot; json:&quot;foo2,omitempty&quot;`</span>
+<span class="w">    </span><span class="c1">// Foo3 is an foo field of Foo.</span>
+<span class="w">    </span><span class="nx">Foo3</span><span class="w">                 </span><span class="kt">string</span><span class="w">   </span><span class="s">`protobuf:&quot;bytes,3,opt,name=foo3,proto3&quot; json:&quot;foo3,omitempty&quot;`</span>
+<span class="w">    </span><span class="nx">XXX_NoUnkeyedLiteral</span><span class="w"> </span><span class="kd">struct</span><span class="p">{}</span><span class="w"> </span><span class="s">`json:&quot;-&quot;`</span>
+<span class="w">    </span><span class="nx">XXX_unrecognized</span><span class="w">     </span><span class="p">[]</span><span class="kt">byte</span><span class="w">   </span><span class="s">`json:&quot;-&quot;`</span>
+<span class="w">    </span><span class="nx">XXX_sizecache</span><span class="w">        </span><span class="kt">int32</span><span class="w">    </span><span class="s">`json:&quot;-&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+<strong>note: proto中的oneof类型目前不能优雅支持，请使用者谨慎使用</strong></p>
+<h3 id="23-crd">2.3 生成CRD<a class="headerlink" href="#23-crd" title="Permanent link">&para;</a></h3>
+<p>在执行2.2后的，在<code>charts/crds</code>目录下生成了<code>microservice.slime.io/v1alpha1/Foo</code></p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apiextensions.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CustomResourceDefinition</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">controller-gen.kubebuilder.io/version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.7.0</span>
+<span class="w">  </span><span class="nt">creationTimestamp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foos.microservice.slime.io</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">microservice.slime.io</span>
+<span class="w">  </span><span class="nt">names</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Foo</span>
+<span class="w">    </span><span class="nt">listKind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FooList</span>
+<span class="w">    </span><span class="nt">plural</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foos</span>
+<span class="w">    </span><span class="nt">singular</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">  </span><span class="nt">scope</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Namespaced</span>
+<span class="w">  </span><span class="nt">versions</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1alpha1</span>
+<span class="w">    </span><span class="nt">schema</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">openAPIV3Schema</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Foo is the Schema for the foos API</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">apiVersion</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;APIVersion</span><span class="nv"> </span><span class="s">defines</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">versioned</span><span class="nv"> </span><span class="s">schema</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">representation</span>
+<span class="w">              </span><span class="s">of</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">object.</span><span class="nv"> </span><span class="s">Servers</span><span class="nv"> </span><span class="s">should</span><span class="nv"> </span><span class="s">convert</span><span class="nv"> </span><span class="s">recognized</span><span class="nv"> </span><span class="s">schemas</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">latest</span>
+<span class="w">              </span><span class="s">internal</span><span class="nv"> </span><span class="s">value,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">reject</span><span class="nv"> </span><span class="s">unrecognized</span><span class="nv"> </span><span class="s">values.</span><span class="nv"> </span><span class="s">More</span><span class="nv"> </span><span class="s">info:</span><span class="nv"> </span><span class="s">https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">          </span><span class="nt">kind</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Kind</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">string</span><span class="nv"> </span><span class="s">value</span><span class="nv"> </span><span class="s">representing</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">REST</span><span class="nv"> </span><span class="s">resource</span><span class="nv"> </span><span class="s">this</span>
+<span class="w">              </span><span class="s">object</span><span class="nv"> </span><span class="s">represents.</span><span class="nv"> </span><span class="s">Servers</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">infer</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">endpoint</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">client</span>
+<span class="w">              </span><span class="s">submits</span><span class="nv"> </span><span class="s">requests</span><span class="nv"> </span><span class="s">to.</span><span class="nv"> </span><span class="s">Cannot</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">updated.</span><span class="nv"> </span><span class="s">In</span><span class="nv"> </span><span class="s">CamelCase.</span><span class="nv"> </span><span class="s">More</span><span class="nv"> </span><span class="s">info:</span><span class="nv"> </span><span class="s">https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">          </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">          </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FooSpec defines the desired state of Foo</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">foo</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Foo is an foo field of Foo.</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">              </span><span class="nt">foo2</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Foo2 is an foo field of Foo.</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">              </span><span class="nt">foo3</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Foo3 is an foo field of Foo.</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">          </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FooStatus defines the observed state of Foo</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">bar</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bar is an foo field of FooStatus.</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">    </span><span class="nt">served</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">subresources</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="nt">status</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">acceptedNames</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">    </span><span class="nt">plural</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">  </span><span class="nt">conditions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">  </span><span class="nt">storedVersions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</code></pre></div>
+<h2 id="3">3.功能开发<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<p>子模块的核心处理逻辑在 <code>staging/src/slime.io/slime/modules/foo/controllers/foo_controller.go</code></p>
+<p>使用者可以编写自己的协调过程，一个简单的样例如下，用户可自行参考</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="p">(</span>
+<span class="w">     </span><span class="s">&quot;slime.io/slime/modules/foo/api/v1alpha1&quot;</span>
+<span class="w">      </span><span class="nx">log</span><span class="w"> </span><span class="s">&quot;github.com/sirupsen/logrus&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// 创建/更新/删除时 打印相关日志 </span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="o">*</span><span class="nx">FooReconciler</span><span class="p">)</span><span class="w"> </span><span class="nx">Reconcile</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="w"> </span><span class="nx">ctrl</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">ctrl</span><span class="p">.</span><span class="nx">Result</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">log</span><span class="p">.</span><span class="nx">Infof</span><span class="p">(</span><span class="s">&quot;begin reconcile, get foo %+v&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">instance</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">foov1alpha1</span><span class="p">.</span><span class="nx">Foo</span><span class="p">{}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Client</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">NamespacedName</span><span class="p">,</span><span class="w"> </span><span class="nx">instance</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">errors</span><span class="p">.</span><span class="nx">IsNotFound</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">instance</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">            </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">            </span><span class="nx">log</span><span class="p">.</span><span class="nx">Infof</span><span class="p">(</span><span class="s">&quot;foo %v not found&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">NamespacedName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">log</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;get foo %v err, %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">NamespacedName</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Result</span><span class="p">{},</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// deleted</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">instance</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">log</span><span class="p">.</span><span class="nx">Infof</span><span class="p">(</span><span class="s">&quot;foo %v is deleted&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Result</span><span class="p">{},</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// add or update</span>
+<span class="w">        </span><span class="nx">log</span><span class="p">.</span><span class="nx">Infof</span><span class="p">(</span><span class="s">&quot;foo %v is added or updated&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Result</span><span class="p">{},</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="4">4.编译构建<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>首先切换至子模块目录 <code>slime/staging/src/slime.io/slime/modules/foo</code></p>
+</li>
+<li>
+<p>之后执行以下命令编译构建镜像
+<div class="highlight"><pre><span></span><code>./publish.sh<span class="w"> </span>build<span class="w"> </span>image
+</code></pre></div>
+也可以直接将编译构建镜像并推送至镜像仓库，<strong>需要指定HUB</strong>
+<div class="highlight"><pre><span></span><code><span class="nv">HUB</span><span class="o">=</span>xxx<span class="w"> </span>./publish.sh<span class="w"> </span>build<span class="w"> </span>image<span class="w"> </span>image-push
+</code></pre></div>
+<strong>note</strong>: slime模块的编译构建需要docker的buildx特性，一个简单的开启方式: 在 <code>~/.docker/config.json</code>增加 <code>"experimental": "enabled"</code></p>
+</li>
+</ul>
+<p>更多的编译构建信息请参考 <a href="../user-guide/image-usage.md">build</a></p>
+<h2 id="5">5.部署<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
+<p>在slime中我们提供了一种slimeboot的部署方式，关于slimeboot的更多信息，可以参考 <a href="../../user-guide/slime-boot/tutorial/">slime-boot</a></p>
+<p>用户只需要提供 SlimeBoot CR（包含部署的模块信息），就可以部署你的子模块，前提是需要安装SlimeBoot相关CRD和Deployment</p>
+<h3 id="51-slimeboot">5.1 SlimeBoot安装<a class="headerlink" href="#51-slimeboot" title="Permanent link">&para;</a></h3>
+<p>下载最新的slime代码
+<div class="highlight"><pre><span></span><code>git clone git@github.com:slime-io/slime.git
+
+cd slime/install/init
+</code></pre></div></p>
+<p>安装合适的crd
+<div class="highlight"><pre><span></span><code>// k8s version &gt;= v1.22
+kubectl apply -f crds-v1.yaml
+
+or
+// k8s v1.16 &lt;= version &lt; 1.22
+kubectl apply -f crds.yaml
+</code></pre></div></p>
+<p>安装deployment/slime-boot
+<div class="highlight"><pre><span></span><code>kubectl create ns mesh-operator
+
+kubectl apply -f deployment_slime-boot.yaml
+</code></pre></div></p>
+<h3 id="52-foo-crd">5.2 创建Foo CRD<a class="headerlink" href="#52-foo-crd" title="Permanent link">&para;</a></h3>
+<p>需要将microservice.slime.io_foos注册到k8s集群, 资源位于子模块<code>chart/crds/microservice.slime.io_foos.yaml</code></p>
+<h3 id="53">5.3 部署应用<a class="headerlink" href="#53" title="Permanent link">&para;</a></h3>
+<p>创建CRD后，使用者需要部署具体的应用，一般情况下使用的是chart, 但slime目前支持了SlimeBoot的部署方式</p>
+<p>在新生成的子模块<code>install/samples/simeboot_foo.yaml</code>路径下，自动生成了的foo模块的SlimeBoot</p>
+<p>使用者在apply该份yaml前，需要修改image信息，以及将name/kind修改成对应的模块名称</p>
+<p><strong>如果没有 mesh-operator 可以先创建一个ns</strong></p>
+<p>SlimeBoot的内容大致如下：</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config.netease.com/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SlimeBoot</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mesh-operator</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">pullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Always</span>
+<span class="w">    </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker.io/slimeio/slime-foo</span>
+<span class="w">    </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${IMAGE}</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">global</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">log</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">logLevel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">info</span>
+</code></pre></div>
+<h3 id="54-pods">5.4 pods 验证<a class="headerlink" href="#54-pods" title="Permanent link">&para;</a></h3>
+<p>经过以上三步，你会在你的mesh-operator发现新的deployment</p>
+<ul>
+<li>foo: 你创建的子模块</li>
+<li>slime-boot: slimeboot deployment</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl get deploy -n mesh-operator
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+foo          1/1     1            1           81m
+slime-boot   1/1     1            1           84m
+</code></pre></div>
+<h3 id="54">5.4 功能验证<a class="headerlink" href="#54" title="Permanent link">&para;</a></h3>
+<p>在之前的几个步骤中，我们注册了CRD，部署了服务，现在我们需要下发一份Foo CR验证服务是否正常。</p>
+<p><strong>note: CR需要使用者根据自己的api自行修改</strong></p>
+<p>apply以下CR之后再删除，观察你部署的pods日志</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">microservice.slime.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Foo</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a</span>
+<span class="w">  </span><span class="nt">foo2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b</span>
+<span class="w">  </span><span class="nt">foo3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c</span><span class="w"> </span>
+</code></pre></div>
+<p>如果你按照第3步修改，将会出现以下日志，也证明你新创建的子模块正常work</p>
+<div class="highlight"><pre><span></span><code>// 创建
+time=2022-12-08T07:33:52Z level=info msg=begin reconcile, get foo default/test
+time=2022-12-08T07:33:52Z level=info msg=foo default/test is added or updated
+
+// 删除
+time=2022-12-08T07:34:52Z level=info msg=begin reconcile, get foo default/test
+time=2022-12-08T07:34:52Z level=info msg=foo default/test not found
+time=2022-12-08T07:34:52Z level=info msg=foo default/test is deleted
+</code></pre></div>
+<p>到这里我们介绍了子模块创建、功能开发、编译构建、部署使用，功能验证。</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../Slime%E5%8C%96%E8%A7%A3%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC%E5%A4%9A%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E5%85%BC%E5%AE%B9%E4%B9%8B%E7%97%9B/" class="md-footer__link md-footer__link--prev" aria-label="上一页: Slime化解服务网格多注册中心兼容之痛" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              Slime化解服务网格多注册中心兼容之痛
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../%E4%B8%80%E4%B8%AA%E9%AB%98%E6%95%88%E7%9A%84Istio%E5%8F%AF%E8%A7%86%E5%8C%96%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7/" class="md-footer__link md-footer__link--next" aria-label="下一页: 一个高效的Istio可视化命令行工具" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              一个高效的Istio可视化命令行工具
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2022 Slime.io
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+        
+        
+      
+      <a href="https://github.com/slime-io" target="_blank" rel="noopener" title="github.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://hub.docker.com/u/slimeio" target="_blank" rel="noopener" title="hub.docker.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.annotate", "content.tabs.link", "navigation.instant", "navigation.sections", "search.highlight", "search.share", "search.suggest", "navigation.tabs", "navigation.tracking", "navigation.tabs.sticky", "navigation.top"], "search": "../../assets/javascripts/workers/search.409db549.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\uff0c\\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56a63758.min.js"></script>
+      
+    
+  </body>
+</html>

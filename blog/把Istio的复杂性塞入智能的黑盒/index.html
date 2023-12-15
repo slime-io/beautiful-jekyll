@@ -1,0 +1,1993 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Slime Documentation">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/todo.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-7.2.5">
+    
+    
+      
+        <title>把Istio的复杂性塞入智能的黑盒 - Slime</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.be71726b.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=:300,400,400i,700%7CRobot+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"";--md-code-font-family:"Robot Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Slime" class="md-header__button md-logo" aria-label="Slime" data-md-component="logo">
+      
+  <img src="../../assets/slime-logo-home.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Slime
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              把Istio的复杂性塞入智能的黑盒
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/slime-io/slime" title="前往 GitHub 仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    slime
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/slime-overview/" class="md-tabs__link">
+        快速上手
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../user-guide/slime-boot/tutorial/" class="md-tabs__link">
+        用户指南
+      </a>
+    </li>
+  
+
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../Slime%E5%8C%96%E8%A7%A3%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC%E5%A4%9A%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E5%85%BC%E5%AE%B9%E4%B9%8B%E7%97%9B/" class="md-tabs__link md-tabs__link--active">
+        Blog
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release/v0.9.0/" class="md-tabs__link">
+        版本发布
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Slime" class="md-nav__button md-logo" aria-label="Slime" data-md-component="logo">
+      
+  <img src="../../assets/slime-logo-home.png" alt="logo">
+
+    </a>
+    Slime
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/slime-io/slime" title="前往 GitHub 仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    slime
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        快速上手
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="快速上手" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          快速上手
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/slime-overview/" class="md-nav__link">
+        简介
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/slime-arch/" class="md-nav__link">
+        架构
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/slime-community/" class="md-nav__link">
+        交流
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/ROADMAP/" class="md-nav__link">
+        路线图
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        用户指南
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="用户指南" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          用户指南
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      <label class="md-nav__link" for="__nav_3_1">
+        Slime-Boot
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Slime-Boot" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Slime-Boot
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/slime-boot/tutorial/" class="md-nav__link">
+        安装教程
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/slime-boot/samples/" class="md-nav__link">
+        使用样例
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      <label class="md-nav__link" for="__nav_3_2">
+        Lazyload
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Lazyload" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Lazyload
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/overview/" class="md-nav__link">
+        概述
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2_2" type="checkbox" id="__nav_3_2_2" >
+      
+      <label class="md-nav__link" for="__nav_3_2_2">
+        特性
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="特性" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_2_2">
+          <span class="md-nav__icon md-icon"></span>
+          特性
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/feature/http%E6%87%92%E5%8A%A0%E8%BD%BD/" class="md-nav__link">
+        http懒加载
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/feature/autoport%E7%89%B9%E6%80%A7/" class="md-nav__link">
+        autoport特性
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/feature/grpc%E6%87%92%E5%8A%A0%E8%BD%BD/" class="md-nav__link">
+        grpc懒加载
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/feature/%E7%89%B9%E5%BE%81%E6%B5%81%E9%87%8F%E5%88%86%E6%B4%BE/" class="md-nav__link">
+        特征流量分派
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/feature/%E7%89%B9%E6%80%A7%E8%AF%B4%E6%98%8E/" class="md-nav__link">
+        特性说明
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/lazyload/tutorial/" class="md-nav__link">
+        使用教程
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_3" type="checkbox" id="__nav_3_3" >
+      
+      <label class="md-nav__link" for="__nav_3_3">
+        Limiter
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Limiter" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_3">
+          <span class="md-nav__icon md-icon"></span>
+          Limiter
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/limiter/overview/" class="md-nav__link">
+        概述
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/limiter/features/" class="md-nav__link">
+        特性
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/limiter/tutorial/" class="md-nav__link">
+        使用教程
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_4" type="checkbox" id="__nav_3_4" >
+      
+      <label class="md-nav__link" for="__nav_3_4">
+        Plugin
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Plugin" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          Plugin
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/plugin/overview/" class="md-nav__link">
+        概述
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/plugin/tutorial/" class="md-nav__link">
+        使用教程
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_5" type="checkbox" id="__nav_3_5" >
+      
+      <label class="md-nav__link" for="__nav_3_5">
+        Meshregistry
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Meshregistry" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_5">
+          <span class="md-nav__icon md-icon"></span>
+          Meshregistry
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/meshregistry/overview/" class="md-nav__link">
+        概述
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/meshregistry/tutorial/" class="md-nav__link">
+        教程
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_6" type="checkbox" id="__nav_3_6" >
+      
+      <label class="md-nav__link" for="__nav_3_6">
+        I9s
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="I9s" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_6">
+          <span class="md-nav__icon md-icon"></span>
+          I9s
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/i9s/overview/" class="md-nav__link">
+        概述
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/i9s/tutorial/" class="md-nav__link">
+        教程
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_7" type="checkbox" id="__nav_3_7" >
+      
+      <label class="md-nav__link" for="__nav_3_7">
+        其他
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="其他" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_7">
+          <span class="md-nav__icon md-icon"></span>
+          其他
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/other/image-usage/" class="md-nav__link">
+        镜像构建
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/other/developers-guide/" class="md-nav__link">
+        developers guide
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      <label class="md-nav__link" for="__nav_4">
+        Blog
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Blog" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Blog
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Slime%E5%8C%96%E8%A7%A3%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC%E5%A4%9A%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E5%85%BC%E5%AE%B9%E4%B9%8B%E7%97%9B/" class="md-nav__link">
+        Slime化解服务网格多注册中心兼容之痛
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E5%BC%80%E5%8F%91%E8%80%85%E6%8C%87%E5%8D%97/" class="md-nav__link">
+        Slime开发者指南
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E4%B8%80%E4%B8%AA%E9%AB%98%E6%95%88%E7%9A%84Istio%E5%8F%AF%E8%A7%86%E5%8C%96%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7/" class="md-nav__link">
+        一个高效的Istio可视化命令行工具
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Slime%E8%AE%A9Istio%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC%E5%8F%98%E5%BE%97%E6%9B%B4%E5%8A%A0%E9%AB%98%E6%95%88%E4%B8%8E%E6%99%BA%E8%83%BD/" class="md-nav__link">
+        Slime让Istio服务网格变得更加高效与智能
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          把Istio的复杂性塞入智能的黑盒
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        把Istio的复杂性塞入智能的黑盒
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    一、导读
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    二、懒加载
+  </a>
+  
+    <nav class="md-nav" aria-label="二、懒加载">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    2.1 背景
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    2.2 价值
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    2.3 动态配置更新
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24" class="md-nav__link">
+    2.4 静态配置增强
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-metric" class="md-nav__link">
+    2.5 Metric类型
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26" class="md-nav__link">
+    2.6 使用模式
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    三、智能限流
+  </a>
+  
+    <nav class="md-nav" aria-label="三、智能限流">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    3.1 背景
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    3.2 价值
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    3.3 实现
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    3.4 本地限流
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35" class="md-nav__link">
+    3.5 全局均分限流
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36" class="md-nav__link">
+    3.6 全局共享限流
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37" class="md-nav__link">
+    3.7 自适应限流
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    四、项目架构
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    五、展望
+  </a>
+  
+    <nav class="md-nav" aria-label="五、展望">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    5.1 懒加载规划
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    5.2 智能限流规划
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    5.3 新模块规划
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        版本发布
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="版本发布" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          版本发布
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.9.0/" class="md-nav__link">
+        v0.9.0
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.8.2/" class="md-nav__link">
+        v0.8.2
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.8.1/" class="md-nav__link">
+        v0.8.1
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.8.0/" class="md-nav__link">
+        v0.8.0
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.7.2/" class="md-nav__link">
+        v0.7.2
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.7.1/" class="md-nav__link">
+        v0.7.1
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.7.0/" class="md-nav__link">
+        v0.7.0
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.6.0/" class="md-nav__link">
+        v0.6.0
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.5.0/" class="md-nav__link">
+        v0.5.0
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/v0.4.0/" class="md-nav__link">
+        v0.4.0
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    一、导读
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    二、懒加载
+  </a>
+  
+    <nav class="md-nav" aria-label="二、懒加载">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    2.1 背景
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    2.2 价值
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    2.3 动态配置更新
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24" class="md-nav__link">
+    2.4 静态配置增强
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-metric" class="md-nav__link">
+    2.5 Metric类型
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26" class="md-nav__link">
+    2.6 使用模式
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    三、智能限流
+  </a>
+  
+    <nav class="md-nav" aria-label="三、智能限流">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    3.1 背景
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    3.2 价值
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    3.3 实现
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    3.4 本地限流
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35" class="md-nav__link">
+    3.5 全局均分限流
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36" class="md-nav__link">
+    3.6 全局共享限流
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37" class="md-nav__link">
+    3.7 自适应限流
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    四、项目架构
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    五、展望
+  </a>
+  
+    <nav class="md-nav" aria-label="五、展望">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    5.1 懒加载规划
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    5.2 智能限流规划
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    5.3 新模块规划
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/slime-io/slime/edit/master/docs/blog/把Istio的复杂性塞入智能的黑盒.md" title="编辑此页" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  <h1>把Istio的复杂性塞入智能的黑盒</h1>
+                
+                <h2 id="_1">一、导读<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>网易数帆轻舟微服务团队很早就开始使用 Istio 做服务网格。在实践过程中，我们开发了很多 Istio 周边模块，方便了自身及网易集团内部客户使用 Istio 。为了回馈社区，我们系统整理了这些模块，并选择了一部分，在2021年初开源出 <a href="https://github.com/slime-io/slime">Slime 项目</a>。</p>
+<p><img src="../../assets/blog-slime-overview-2021/slime_logo.png"  /></p>
+<p>Slime 项目旨在解决 Istio 使用上的痛点，方便用户使用 Istio 的高级功能，并始终坚持**可以无缝对接Istio，无需任何的定制化改造**的原则，极大降低了使用门槛。</p>
+<p>这一年多来，Slime 在架构、功能、工程方面做了很多变化和尝试，得到了很大提升，并且在2021年12月受邀加入 Istio 生态，正式成为 <a href="https://istio.io/latest/about/ecosystem/#integrations">Istio Ecosystem - integrations</a> 的成员。</p>
+<p>今天，本文将会介绍 Slime 现阶段的主要能力，以懒加载和智能限流模块为主，并展望未来发展，希望能让更多的 ServiceMesher 了解 Slime，参与 Slime，一起更轻松地使用服务网格。</p>
+<h2 id="_2">二、懒加载<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h3 id="21">2.1 背景<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
+<p>Istio 的全量推送性能问题，是所有 Istio 使用者都要面对的问题。</p>
+<p>众所周知，早期 Istio 的配置下发非常粗糙，直接全量推送。这意味着，随着服务网格中业务规模的不断扩大，控制面需要下发的内容越来越多，数据面需要接收的内容也不断增长，这必然带来性能问题。集群中往往有多个业务系统。一个业务系统的应用感知所有业务系统的配置，这意味着推送大量冗余配置，也是不合理的。如下图左侧所示，A 只和 B 有关系，却被推送了 C 和 D 的配置。 另一个问题是，推送的频率会很高。当一个服务发生变化，控制面要通知数据面所有SidecarProxy。</p>
+<p><img src="../../assets/blog-slime-overview-2021/istio-sidecarscope.png"  /></p>
+<p>于是，Istio 1.1版本提供了解决方案 - Sidecar CRD （本文会称之为 SidecarScope，以和 Envoy 实现的 SidecarProxy 做区分）。用户可以在 SidecarScope 中描述 SidecarProxy 需要关心的服务信息，借此屏蔽无关的服务配置下发。结果如上图右侧所示，服务配置了 SidecarScope 后，收到的配置精简了，不再包含无关的配置。同时，不相关服务的配置变化也不会再通知，减少了推送频率。</p>
+<p>一个典型的 SidecarScope 样例如下，样例表示允许匹配的 SidecarProxy 感知 Namespace prod1 和 istio-system 中的所有服务以及 Namespace prod2中 ratings 服务配置信息。</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sidecar</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod1</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">egress</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;prod1/*&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;prod2/ratings.prod2.svc.cluster.local&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">istio-system/*</span>
+</code></pre></div>
+<p>Istio 提供的 SidecarScope 可以解决配置全量下发的问题，看起来问题解决了。但是在实践中，手动管理 SidecarScope 很困难。一方面是服务依赖的信息不好整理，另一方面一旦配置有误，会导致调用出现问题。这非常不利于服务网格大规模落地。我们迫切希望能够更智能地管理 SidecarScope。</p>
+<h3 id="22">2.2 价值<a class="headerlink" href="#22" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/slime-io/lazyload">懒加载模块</a>就是用于解决上述问题。懒加载可**自动对接服务网格，在转发过程中支持 Istio 所有网络治理能力，无性能问题**。它可以帮助业务人员使用了 SidecarScope，而无需直接管理它。</p>
+<p>我们认为，服务依赖关系可以分成运行过程中不断变化的动态服务依赖和业务人员可以提前知晓的静态服务依赖两类。对于动态依赖，我们设计了一套机制，实时获取服务依赖并修改 SidecarScope ；对于静态依赖，我们着重简化了配置规则，使其更加人性化。</p>
+<h3 id="23">2.3 动态配置更新<a class="headerlink" href="#23" title="Permanent link">&para;</a></h3>
+<p>懒加载包含 Global-sidecar 和 Lazyload Controller 两个组件。</p>
+<ul>
+<li>Global-sidecar: 兜底组件，当源服务无法找到目标服务时，进行兜底转发，并生成相应的服务依赖 Metric</li>
+<li>Lazyload Controller: 控制组件，处理 Global-sidecar 上报的 Metric，修改源服务的 SidecarScope，为其增加相应配置</li>
+</ul>
+<p>简化的动态配置更新流程如下所示</p>
+<p><img src="../../assets/blog-slime-overview-2021/lazyload-core.png"  /></p>
+<ul>
+<li>服务 A 的 SidecarScope 初始是空白，没有服务 B 的配置信息</li>
+<li>服务 A 发起对服务 B 的第一次访问，由于服务 A 的 SidecarProxy 没有服务 B 的配置信息，请求发送到兜底组件 Global-Sidecar</li>
+<li>兜底组件 Global-Sidecar 拥有全量服务配置信息，自然包含服务 B ，转发请求到服务 B，首次请求成功，并生成 Metric(A-&gt;B)</li>
+<li>Lazyload Controller 感知到 Metric(A-&gt;B) ，修改 SidecarScope A，为其增加服务 B 的配置</li>
+<li>服务 A 第二次访问服务 B 时，服务 A 的 SidecarProxy 已经有服务 B 的配置，请求直达服务 B</li>
+</ul>
+<p>详细的流程图如下</p>
+<p><img src="../../assets/blog-slime-overview-2021/lazyload-arch-v2.png"  /></p>
+<p>其中 ServiceFence 是懒加载中引入的 CRD，作用是存储与服务相关的 Metric，实现 SidecarScope 的更新。详细的介绍可参考 <a href="https://github.com/slime-io/lazyload/blob/master/lazyload_tutorials_zh.md#%E6%9E%B6%E6%9E%84">懒加载教程-架构</a></p>
+<h3 id="24">2.4 静态配置增强<a class="headerlink" href="#24" title="Permanent link">&para;</a></h3>
+<p>懒加载发展早期，我们聚焦于动态服务依赖关系的获取，这看起来智能又省心。然而在实践中，我们发现很多用户出于安全考虑，往往希望直接配置一些规则到 SidecarScope 中，即配置静态服务依赖关系。于是，我们开始思考如何灵活配置静态依赖关系。</p>
+<p>于是，我们设计出一套很好用的静态规则，并将其写到 ServiceFence 中（是的，就是动态配置更新中用于存储 Metric 的 CRD，它在这里发挥了新作用）。之后 Lazyload Controller 根据这些规则更新相应的 SidecarScope 。</p>
+<p>现在我们提供的静态配置规则有三类：</p>
+<ul>
+<li>依赖某些 Namespace 所有服务</li>
+<li>依赖具有某些 label 的所有服务</li>
+<li>依赖某个特定服务</li>
+</ul>
+<p>此处以 label 匹配举个例子，假如应用部署如下图所示</p>
+<p><img src="../../assets/blog-slime-overview-2021/lazyload-static-config-example.png"  /></p>
+<p>现在为服务 productpage 启用懒加载，已知 productpage 的依赖规则为</p>
+<ul>
+<li>具有 label <code>app: details</code>的所有服务</li>
+<li>具有 label <code>app: reviews</code> 与<code>version: v2</code>的所有服务</li>
+</ul>
+<p>那么对应的 ServiceFence 写法如下</p>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">microservice.slime.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceFence</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">productpage</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">labelSelector</span><span class="p">:</span><span class="w"> </span><span class="c1"># Match service label, multiple selectors are &#39;or&#39; relationship</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">details</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">selector</span><span class="p">:</span><span class="w"> </span><span class="c1"># labels in one selector are &#39;and&#39; relationship</span>
+<span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reviews</span>
+<span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2</span>
+</code></pre></div>
+<p>Lazyload Controller 会根据实际匹配结果，填充 SidecarScope。 实际得到的 SidecarScope 如下，上图中绿色的服务全部选中</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sidecar</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">productpage</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">egress</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*/details.ns1.svc.cluster.local&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*/details.ns2.svc.cluster.local&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*/details.ns3.svc.cluster.local&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*/reviews.ns2.svc.cluster.local&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">istio-system/*</span><span class="w"> </span><span class="c1"># istio部署的ns</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mesh-operator/*</span><span class="w"> </span><span class="c1"># lazyload部署的ns</span>
+<span class="w">  </span><span class="nt">workloadSelector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">productpage</span>
+</code></pre></div>
+<p>终于，我们不用在上线前反复确认，是否填齐了所有服务依赖，更不用在服务依赖关系变更时，手动修改 SidecarScope。配置两三条 ServiceFence 的规则就可搞定一切。</p>
+<p>详细的介绍可参考 <a href="https://github.com/slime-io/lazyload/blob/master/lazyload_tutorials_zh.md#%E9%9D%99%E6%80%81%E6%9C%8D%E5%8A%A1%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB%E6%B7%BB%E5%8A%A0">懒加载教程 - 静态服务依赖关系添加</a></p>
+<h3 id="25-metric">2.5 Metric类型<a class="headerlink" href="#25-metric" title="Permanent link">&para;</a></h3>
+<p>在2.3章节中，我们解释了 Metric 是动态依赖关系生成的根本。目前懒加载支持的 Metric 类型有两个：Prometheus 和 AccessLog 。</p>
+<p><img src="../../assets/blog-slime-overview-2021/lazyload-metric-modes.png"  /></p>
+<p>使用 Prometheus Mode，指标由各个业务应用的 SidecarProxy 产生。Lazyload Controller 查询 Prometheus 获取指标。此模式需要服务网格对接 Prometheus。</p>
+<p>使用 AccessLog Mode，指标来源是 Global-sidecar 的 AccessLog。Global-sidecar 在兜底转发的同时，会生成固定格式的 AccessLog，发给 Lazyload Controller 进行处理。此模式无需外部依赖，更为轻便。</p>
+<h3 id="26">2.6 使用模式<a class="headerlink" href="#26" title="Permanent link">&para;</a></h3>
+<p>懒加载模块有两种使用模式，Namespace 模式和 Cluster 模式。两种模式中，Lazyload Controller 都是全局唯一的，不同点在于前者的 Global-sidecar 是 Namespace 级别，后者是 Cluster 级别。如下图所示</p>
+<p><img src="../../assets/blog-slime-overview-2021/lazyload-deploy-modes.png"  /></p>
+<p>对于 N 个 Namespace，Namespace 模式的懒加载组件数是 O(N)，Cluster 模式则是 O(1)。现在我们更推荐使用 Cluster 模式。如上图所示，每个集群只需要部署两个 Deployment，简洁明了。</p>
+<p>详细的介绍可参考 <a href="https://github.com/slime-io/lazyload/blob/master/lazyload_tutorials_zh.md#%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8">懒加载教程 - 安装和使用</a></p>
+<h2 id="_3">三、智能限流<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="31">3.1 背景<a class="headerlink" href="#31" title="Permanent link">&para;</a></h3>
+<p>随着 Istio 移除 Mixer，在服务网格中实现限流变得困难起来。</p>
+<ul>
+<li>场景少：Envoy 的本地限流组件功能简单，不能实现全局均分、全局共享限流等高阶用法</li>
+<li>配置复杂：本地限流需要借助 Envoy 内建插件 <code>envoy.local.ratelimit</code>，用户不得不面对复杂的 EnvoyFilter 配置</li>
+<li>条件固定：没有根据资源使用率等实际情况，自动调整限流配置的能力</li>
+</ul>
+<h3 id="32">3.2 价值<a class="headerlink" href="#32" title="Permanent link">&para;</a></h3>
+<p>为了解决这个问题，我们推出了<a href="https://github.com/slime-io/limiter">智能限流模块</a>。智能限流模块具有很多优势，具体来说</p>
+<ul>
+<li>场景多：支持本地限流、全局均分限流、全局共享限流</li>
+<li>配置方便：配置简单，可读性好，无需配置 EnvoyFilter</li>
+<li>条件自适应：限流触发的条件可结合 Prometheus Metric，动态计算，实现自适应限流效果</li>
+</ul>
+<h3 id="33">3.3 实现<a class="headerlink" href="#33" title="Permanent link">&para;</a></h3>
+<p>我们设计了一个新的CRD - SmartLimiter，其配置规则接近自然语义。模块的逻辑分成两部分</p>
+<ul>
+<li>SmartLimiter Controller 获取监控数据，更新 SmartLimiter CR</li>
+<li>SmartLimiter CR 到 EnvoyFilter 的转换</li>
+</ul>
+<p>限流模块架构如下</p>
+<p><img src="../../assets/blog-slime-overview-2021/limiter-arch.png"  /></p>
+<p>红色是本地限流，绿色是全局均分限流，而蓝色是全局共享限流。详细的介绍可参考 <a href="https://github.com/slime-io/limiter/blob/master/README_ZH.md#%E6%9E%B6%E6%9E%84">智能限流教程 - 架构</a></p>
+<h3 id="34">3.4 本地限流<a class="headerlink" href="#34" title="Permanent link">&para;</a></h3>
+<p>本地限流是最基础的使用场景。SmartLimiter 替服务的每个 Pod 设置固定的限流数值。底层依赖 Envoy 内建插件 <code>envoy.local.ratelimit</code>。标识字段是<code>action.strategy: single</code>。</p>
+<p>一个样例如下，表示 reviews 服务每个 Pod 的9080端口每分钟限流 60次。</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">microservice.slime.io/v1alpha2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SmartLimiter</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reviews</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">_base</span><span class="p">:</span><span class="w">   </span><span class="c1"># 匹配所有服务，关键词 _base ，也可以是你定义的 subset ，如 v1 </span>
+<span class="w">      </span><span class="nt">descriptor</span><span class="p">:</span><span class="w">   </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w">    </span><span class="c1"># 限流规则</span>
+<span class="w">          </span><span class="nt">fill_interval</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">          </span><span class="nt">quota</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;100&#39;</span>
+<span class="w">          </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;single&#39;</span><span class="w">  </span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w">  </span><span class="c1"># 永远执行该限流</span>
+<span class="w">        </span><span class="nt">target</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9080</span>
+</code></pre></div>
+<h3 id="35">3.5 全局均分限流<a class="headerlink" href="#35" title="Permanent link">&para;</a></h3>
+<p>全局均分限功能根据用户设置的总的限流数，然后平均分配到各个 Pod。底层依赖 Envoy 内建插件 <code>envoy.local.ratelimit</code>。标识字段是<code>action.strategy: average</code>。</p>
+<p>一个样例如下，表示 reviews 服务所有 Pod 的9080端口每分钟一共限流 60次，具体到每个 Pod 的限流次数由 <code>action.quota</code>计算得出。</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">microservice.slime.io/v1alpha2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SmartLimiter</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reviews</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">_base</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">descriptor</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">fill_interval</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">          </span><span class="nt">quota</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;100/{{._base.pod}}&#39;</span><span class="w"> </span><span class="c1"># 如果reviews实例数是2,则每个Pod限流每分钟50次</span>
+<span class="w">          </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;average&#39;</span><span class="w">  </span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">        </span><span class="nt">target</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9080</span>
+</code></pre></div>
+<h3 id="36">3.6 全局共享限流<a class="headerlink" href="#36" title="Permanent link">&para;</a></h3>
+<p>全局共享限流限制目标服务的所有 Pod 可访问的总次数，不会像全局均分限流限制在平均值，比较适用于访问不均的场景。此场景会维护一个全局计数器，底层依赖 Envoy 插件 <code>envoy.filters.http.ratelimit</code>和 RLS 服务提供的全局计数能力。标识字段是<code>action.strategy: global</code>。</p>
+<p>一个样例如下，表示 reviews 服务所有 Pod 的9080端口每分钟一共限流 60次，不均分到每个 Pod 。</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">microservice.slime.io/v1alpha2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SmartLimiter</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reviews</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">_base</span><span class="p">:</span>
+<span class="w">      </span><span class="c1">#rls: &#39;outbound|18081||rate-limit.istio-system.svc.cluster.local&#39; 如果不指定默认是该地址</span>
+<span class="w">      </span><span class="nt">descriptor</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">fill_interval</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">          </span><span class="nt">quota</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;100&#39;</span>
+<span class="w">          </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;global&#39;</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">        </span><span class="nt">target</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9080</span><span class="w"> </span>
+</code></pre></div>
+<h3 id="37">3.7 自适应限流<a class="headerlink" href="#37" title="Permanent link">&para;</a></h3>
+<p>上述三个场景中，触发限流的条件字段<code>condition</code>除了可以是固定数值（true），还可以是 Prometheus Query 的计算结果。后者就是自适应限流。此场景和上述三个场景是交叉关系。</p>
+<p>用户可以自定义需要获取的监控指标，比如定义一个handler <code>cpu.sum</code>，其数值等于 <code>sum(container_cpu_usage_seconds_total{namespace="$namespace",pod=~"$pod_name",image=""})</code>，后面就可以将触发限流的<code>condition</code>设置为<code>{{._base.cpu.sum}}&gt;100</code> 的形式，实现自适应限流。</p>
+<p>一个样例如下，表示 reviews 服务每个 Pod 的9080端口只有当CPU使用值大于100时，每分钟限流 60次。对比3.4中的例子，<code>condition</code>不再永远为真，是否触发限流，由 SmartLimiter Controller 根据应用实际状态判断，更加智能化。</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">microservice.slime.io/v1alpha2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SmartLimiter</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reviews</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">_base</span><span class="p">:</span><span class="w">   </span><span class="c1"># 匹配所有服务，关键词 _base ，也可以是你定义的 subset ，如 v1 </span>
+<span class="w">      </span><span class="nt">descriptor</span><span class="p">:</span><span class="w">   </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w">    </span><span class="c1"># 限流规则</span>
+<span class="w">          </span><span class="nt">fill_interval</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">          </span><span class="nt">quota</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;100&#39;</span>
+<span class="w">          </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;single&#39;</span><span class="w">  </span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{._base.cpu.sum}}&gt;100&#39;</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">如果服务的所有负载大于100，则执行该限流</span>
+<span class="w">        </span><span class="nt">target</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9080</span>
+</code></pre></div>
+<h2 id="_4">四、项目架构<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>这一节简单介绍下 Slime 的项目架构，帮助大家理解 Slime 多模块场景下的代码仓库和部署形态。架构如下图所示</p>
+<p><img src="../../assets/blog-slime-overview-2021/slime-arch-v2.png"  /></p>
+<p>Slime 的项目架构遵守“高内聚，低耦合”的设计思想，包含三块</p>
+<ul>
+<li>Modules: 提供某个功能的独立模块，像懒加载、智能限流都属于 Modules</li>
+<li>
+<p>Framework: 模块的底座，提供 Modules 需要的基础能力，比如日志输出、监控指标获取</p>
+</li>
+<li>
+<p>Slime-boot: 启动组件，负责拉起 Framework 和指定的 Modules</p>
+</li>
+</ul>
+<p>整个代码仓库分成 1+N。Slime-boot 和 Framework 位于 slime 主仓库 <a href="https://github.com/slime-io/slime">slime-io/slime</a>，懒加载等模块全部位于独立仓库。</p>
+<p>部署形式也是 1+N 的，即一个 Slime Deployment 包含一个公用的 Framework 和用户想要的 N 个模块。好处是，无论使用多少 Slime 模块，部署时都是一个 Deployment，很好解决了微服务组件过多的维护痛点。</p>
+<h2 id="_5">五、展望<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>Slime 开源至今一年多的时间，除了模块层面新功能的添加、已有功能的完善，还经过了一次架构大调整和 Metric 体系的重构，可以说，现在 Slime 的发展已经走上正轨，进入新的阶段。未来规划可以分为已有模块的提升和新模块的引入，下面详细说明。</p>
+<h3 id="51">5.1 懒加载规划<a class="headerlink" href="#51" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>特性说明</th>
+<th>性质</th>
+<th>计划发布时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>灾备兜底能力</td>
+<td>改造 Global-Sidecar 组件，完善其兜底能力，使懒加载可用于一些灾备场景</td>
+<td>确定性</td>
+<td>2022.Q2</td>
+</tr>
+<tr>
+<td>多服务注册中心支持</td>
+<td>懒加载目前主要适配 Kubernetes 场景，计划通过对 ServiceEntry 的支持，适配多服务注册中心场景</td>
+<td>确定性</td>
+<td>2022.Q2</td>
+</tr>
+<tr>
+<td>更灵活的静态配置</td>
+<td>通过更高维度的抽象，实现 ServiceFence 的自动配置，支持更高级的静态规则</td>
+<td>确定性</td>
+<td>2022.Q3</td>
+</tr>
+<tr>
+<td>多协议懒加载</td>
+<td>懒加载目前支持 Http 服务，计划支持其他协议服务的懒加载，比如 Dubbo 等</td>
+<td>探索性</td>
+<td>2022.H2</td>
+</tr>
+<tr>
+<td>跨集群懒加载</td>
+<td>懒加载目前支持同集群服务，计划支持多集群服务网格场景下的跨集群服务懒加载</td>
+<td>探索性</td>
+<td>2022.H2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52">5.2 智能限流规划<a class="headerlink" href="#52" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>特性说明</th>
+<th>性质</th>
+<th>计划发布时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>多服务注册中心支持</td>
+<td>智能限流目前主要适配 Kubernetes 场景，计划通过对 ServiceEntry 的支持，适配多服务注册中心场景</td>
+<td>确定性</td>
+<td>2022.Q2</td>
+</tr>
+<tr>
+<td>出流量侧限流</td>
+<td>智能限流目前支持入流量侧限流，这可以满足大多数场景，但是从能力完备度上，计划支持出流量侧限流</td>
+<td>确定性</td>
+<td>2022.Q3</td>
+</tr>
+<tr>
+<td>多协议智能限流</td>
+<td>智能限流目前支持 Http 服务，计划支持其他协议服务的智能限流，比如 Dubbo 等</td>
+<td>探索性</td>
+<td>2022.H2</td>
+</tr>
+<tr>
+<td>跨集群智能限流</td>
+<td>智能限流目前支持同集群服务，计划支持多集群服务网格场景下的跨集群智能限流</td>
+<td>探索性</td>
+<td>2022.H2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53">5.3 新模块规划<a class="headerlink" href="#53" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>模块名（规划）</th>
+<th>模块说明</th>
+<th>性质</th>
+<th>计划发布时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IPerf</td>
+<td>专为 Istio 打造的性能测试工具集，集成 Istio 测试框架，添加自定义测试用例，可直观对比不同版本的性能变化</td>
+<td>确定性</td>
+<td>2022.H2</td>
+</tr>
+<tr>
+<td>Tracetio</td>
+<td>服务网格的全链路自动化运维，提高排障效率，给出智能化判断</td>
+<td>确定性</td>
+<td>2022.H2</td>
+</tr>
+<tr>
+<td>I9s</td>
+<td>类似 K9s ，适用于服务网格场景的黑屏半命令行半图形化运维工具</td>
+<td>确定性</td>
+<td>2022.H2</td>
+</tr>
+</tbody>
+</table>
+<p>希望上面的这些规划能尽快与大家见面。Slime 相关信息可以查阅 <a href="https://slime-io.github.io/">Slime - Home</a>，欢迎大家多多与我们交流。</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../Slime%E8%AE%A9Istio%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC%E5%8F%98%E5%BE%97%E6%9B%B4%E5%8A%A0%E9%AB%98%E6%95%88%E4%B8%8E%E6%99%BA%E8%83%BD/" class="md-footer__link md-footer__link--prev" aria-label="上一页: Slime让Istio服务网格变得更加高效与智能" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              Slime让Istio服务网格变得更加高效与智能
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../../release/v0.9.0/" class="md-footer__link md-footer__link--next" aria-label="下一页: v0.9.0" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              v0.9.0
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2022 Slime.io
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+        
+        
+      
+      <a href="https://github.com/slime-io" target="_blank" rel="noopener" title="github.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://hub.docker.com/u/slimeio" target="_blank" rel="noopener" title="hub.docker.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.annotate", "content.tabs.link", "navigation.instant", "navigation.sections", "search.highlight", "search.share", "search.suggest", "navigation.tabs", "navigation.tracking", "navigation.tabs.sticky", "navigation.top"], "search": "../../assets/javascripts/workers/search.409db549.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\uff0c\\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56a63758.min.js"></script>
+      
+    
+  </body>
+</html>
