@@ -1,8 +1,8 @@
 # 路线图
 
-## Slime v0.9.0（即将发布）
+## Slime v0.9.0（发布中）
 
-敬请期待
+详见[V0.9.0](https://github.com/slime-io/slime/releases/tag/v0.9.0)
 
 ## Slime v0.8.2（已发布）
 
